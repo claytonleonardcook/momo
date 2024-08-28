@@ -1,0 +1,33 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Build",
+      "type": "node-terminal",
+      "request": "launch",
+      "preLaunchTask": "Initialization",
+      "command": "npm run build"
+    },
+    {
+      "name": "Development",
+      "type": "node-terminal",
+      "request": "launch",
+      "preLaunchTask": "Initialization",
+      "command": "npm run dev"
+    },
+    {
+      "name": "Prerequisites",
+      "type": "node-terminal",
+      "request": "launch",
+      "windows": {
+        "command": "winget install --id Rustlang.Rustup"
+      },
+      "linux": {
+        "command": "sudo apt update && sudo apt install libwebkit2gtk-4.0-dev build-essential curl wget file libssl-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev & curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh"
+      }
+    }
+  ]
+}
