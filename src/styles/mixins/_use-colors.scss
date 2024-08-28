@@ -1,0 +1,11 @@
+@use "sass:list";
+@use "../settings/colors" as *;
+
+@mixin use-colors($ignored-colors: ()) {
+  @each $name in $colors {
+    @if not list.index($ignored-colors, $name) {
+      $value: --#{$name};
+      @content ($name, $value);
+    }
+  }
+}

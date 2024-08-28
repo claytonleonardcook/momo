@@ -1,0 +1,132 @@
+@use "settings" as *;
+@use "utilities" as *;
+@use "mixins" as *;
+
+body,
+body[data-theme="light"] {
+  --rosewater: #{$light-rosewater};
+  @include lighten-and-darken("rosewater", $light-rosewater);
+  --flamingo: #{$light-flamingo};
+  @include lighten-and-darken("flamingo", $light-flamingo);
+  --pink: #{$light-pink};
+  @include lighten-and-darken("pink", $light-pink);
+  --mauve: #{$light-mauve};
+  @include lighten-and-darken("mauve", $light-mauve);
+  --red: #{$light-red};
+  @include lighten-and-darken("red", $light-red);
+  --maroon: #{$light-maroon};
+  @include lighten-and-darken("maroon", $light-maroon);
+  --peach: #{$light-peach};
+  @include lighten-and-darken("peach", $light-peach);
+  --yellow: #{$light-yellow};
+  @include lighten-and-darken("yellow", $light-yellow);
+  --green: #{$light-green};
+  @include lighten-and-darken("green", $light-green);
+  --teal: #{$light-teal};
+  @include lighten-and-darken("teal", $light-teal);
+  --sky: #{$light-sky};
+  @include lighten-and-darken("sky", $light-sky);
+  --sapphire: #{$light-sapphire};
+  @include lighten-and-darken("sapphire", $light-sapphire);
+  --blue: #{$light-blue};
+  @include lighten-and-darken("blue", $light-blue);
+  --lavender: #{$light-lavender};
+  @include lighten-and-darken("lavender", $light-lavender);
+  --text: #{$light-text};
+  @include lighten-and-darken("text", $light-text);
+  --subtext1: #{$light-subtext1};
+  @include lighten-and-darken("subtext1", $light-subtext1);
+  --subtext0: #{$light-subtext0};
+  @include lighten-and-darken("subtext0", $light-subtext0);
+  --overlay2: #{$light-overlay2};
+  @include lighten-and-darken("overlay2", $light-overlay2);
+  --overlay1: #{$light-overlay1};
+  @include lighten-and-darken("overlay1", $light-overlay1);
+  --overlay0: #{$light-overlay0};
+  @include lighten-and-darken("overlay0", $light-overlay0);
+  --surface2: #{$light-surface2};
+  @include lighten-and-darken("surface2", $light-surface2);
+  --surface1: #{$light-surface1};
+  @include lighten-and-darken("surface1", $light-surface1);
+  --surface0: #{$light-surface0};
+  @include lighten-and-darken("surface0", $light-surface0);
+  --base: #{$light-base};
+  @include lighten-and-darken("base", $light-base);
+  --mantle: #{$light-mantle};
+  @include lighten-and-darken("mantle", $light-mantle);
+  --crust: #{$light-crust};
+  @include lighten-and-darken("crust", $light-crust);
+}
+
+body[data-theme="dark"] {
+  --rosewater: #{$dark-rosewater};
+  @include lighten-and-darken("rosewater", $dark-rosewater);
+  --flamingo: #{$dark-flamingo};
+  @include lighten-and-darken("flamingo", $dark-flamingo);
+  --pink: #{$dark-pink};
+  @include lighten-and-darken("pink", $dark-pink);
+  --mauve: #{$dark-mauve};
+  @include lighten-and-darken("mauve", $dark-mauve);
+  --red: #{$dark-red};
+  @include lighten-and-darken("red", $dark-red);
+  --maroon: #{$dark-maroon};
+  @include lighten-and-darken("maroon", $dark-maroon);
+  --peach: #{$dark-peach};
+  @include lighten-and-darken("peach", $dark-peach);
+  --yellow: #{$dark-yellow};
+  @include lighten-and-darken("yellow", $dark-yellow);
+  --green: #{$dark-green};
+  @include lighten-and-darken("green", $dark-green);
+  --teal: #{$dark-teal};
+  @include lighten-and-darken("teal", $dark-teal);
+  --sky: #{$dark-sky};
+  @include lighten-and-darken("sky", $dark-sky);
+  --sapphire: #{$dark-sapphire};
+  @include lighten-and-darken("sapphire", $dark-sapphire);
+  --blue: #{$dark-blue};
+  @include lighten-and-darken("blue", $dark-blue);
+  --lavender: #{$dark-lavender};
+  @include lighten-and-darken("lavender", $dark-lavender);
+  --text: #{$dark-text};
+  @include lighten-and-darken("text", $dark-text);
+  --subtext1: #{$dark-subtext1};
+  @include lighten-and-darken("subtext1", $dark-subtext1);
+  --subtext0: #{$dark-subtext0};
+  @include lighten-and-darken("subtext0", $dark-subtext0);
+  --overlay2: #{$dark-overlay2};
+  @include lighten-and-darken("overlay2", $dark-overlay2);
+  --overlay1: #{$dark-overlay1};
+  @include lighten-and-darken("overlay1", $dark-overlay1);
+  --overlay0: #{$dark-overlay0};
+  @include lighten-and-darken("overlay0", $dark-overlay0);
+  --surface2: #{$dark-surface2};
+  @include lighten-and-darken("surface2", $dark-surface2);
+  --surface1: #{$dark-surface1};
+  @include lighten-and-darken("surface1", $dark-surface1);
+  --surface0: #{$dark-surface0};
+  @include lighten-and-darken("surface0", $dark-surface0);
+  --base: #{$dark-base};
+  @include lighten-and-darken("base", $dark-base);
+  --mantle: #{$dark-mantle};
+  @include lighten-and-darken("mantle", $dark-mantle);
+  --crust: #{$dark-crust};
+  @include lighten-and-darken("crust", $dark-crust);
+}
+
+body {
+  --warning: var(--yellow);
+  --success: var(--green);
+  --danger: var(--red);
+  --none: none;
+
+  background-color: var(--crust);
+  color: var(--text);
+}
+
+a {
+  cursor: pointer;
+
+  &:hover {
+    color: var(--subtext0);
+  }
+}

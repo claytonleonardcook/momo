@@ -1,0 +1,21 @@
+@use "../mixins" as *;
+
+@include use-colors(
+    $ignored-colors: (
+      "none",
+    )
+  )
+  using ($name, $value) {
+  .fill-#{$name} {
+    transition: fill 0.25s;
+    fill: var(#{$value});
+
+    &--light-50:hover {
+      fill: var(#{$value}--light-50);
+    }
+
+    &--dark-50:hover {
+      fill: var(#{$value}--dark-50);
+    }
+  }
+}
