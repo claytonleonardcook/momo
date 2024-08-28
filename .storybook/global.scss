@@ -1,0 +1,13 @@
+@use "../src/styles/global.scss" as *;
+
+div.docs-story {
+  background-color: var(--crust);
+}
+
+body.sb-main-fullscreen {
+  height: 100vh;
+}
+
+div#storybook-root {
+  height: 100%;
+}

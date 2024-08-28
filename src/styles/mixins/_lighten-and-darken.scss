@@ -1,0 +1,8 @@
+@use "sass:color";
+
+@mixin lighten-and-darken($name, $color) {
+  --#{$name}--light-25: #{color.scale($color, $lightness: 25%)};
+  --#{$name}--light-50: #{color.scale($color, $lightness: 50%)};
+  --#{$name}--dark-25: #{color.scale($color, $lightness: -25%)};
+  --#{$name}--dark-50: #{color.scale($color, $lightness: -50%)};
+}
