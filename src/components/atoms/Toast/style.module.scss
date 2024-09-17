@@ -1,0 +1,25 @@
+.toast {
+  --toast-color: none;
+  --hover-percent: 50%;
+
+  display: flex;
+  flex-direction: row;
+  background-color: var(--base);
+  color: var(--toast-color);
+  border: var(--toast-color) solid 2px;
+  padding: 16px 24px;
+  border-radius: 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.toast-container {
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+  padding: 8px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
