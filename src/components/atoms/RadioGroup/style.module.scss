@@ -1,0 +1,48 @@
+.radio-group {
+  --radio-group-color: none;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  &__radio-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+    color: var(--text);
+    forced-color-adjust: none;
+
+    &:before {
+      content: "";
+      display: block;
+      width: 1rem;
+      height: 1rem;
+      box-sizing: border-box;
+      border: 2px solid var(--text);
+      background: transparent;
+      border-radius: 50%;
+      transition: all 0.25s;
+    }
+
+    &[data-pressed]:before {
+      border-color: var(--radio-group-color);
+    }
+
+    &[data-selected] {
+      &:before {
+        border-color: var(--radio-group-color);
+        border-width: 0.33rem;
+      }
+
+      &[data-pressed]:before {
+        border-color: var(--radio-group-color);
+      }
+    }
+
+    &[data-focus-visible]:before {
+      outline: 2px solid var(--radio-group-color);
+      outline-offset: 2px;
+    }
+  }
+}
