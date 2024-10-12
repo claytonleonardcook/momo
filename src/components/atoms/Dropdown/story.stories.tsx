@@ -1,7 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
 
 import Dropdown from ".";
-import { FaX } from "react-icons/fa6";
 import { useState } from "react";
 import { Key } from "react-aria-components";
 
