@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Key } from "react-aria-components";
 
 /**
- * TODO: Write documentation.
+ * Dropdowns are used to allow users to select from a finite amound of values.
  */
 const meta: Meta<typeof Dropdown> = {
   title: "Components/Atoms/Dropdown",
