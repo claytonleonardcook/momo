@@ -1,0 +1,45 @@
+.checkbox {
+  --checkbox-color: none;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+
+  &__input {
+    transition: background-color 0.25s ease-in;
+    border: solid 2px var(--text);
+    display: flex;
+    aspect-ratio: 1 / 1;
+    height: 1rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    background-color: transparent;
+
+    svg {
+      transition: fill 0.25s ease-in;
+      fill: transparent;
+    }
+  }
+
+  &[data-focus-visible] {
+    .checkbox__input {
+      outline: 2px solid var(--checkbox-color);
+      outline-offset: 2px;
+    }
+  }
+
+  &[data-selected],
+  &[data-indeterminate] {
+    .checkbox__input {
+      border-color: var(--checkbox-color);
+      background: var(--checkbox-color);
+
+      svg {
+        fill: var(--base);
+      }
+    }
+  }
+}
