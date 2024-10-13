@@ -123,6 +123,17 @@ body {
   color: var(--text);
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span {
+  color: var(--text);
+}
+
 a {
   cursor: pointer;
 
