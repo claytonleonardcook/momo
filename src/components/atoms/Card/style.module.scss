@@ -1,0 +1,32 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  border: none;
+  background: none;
+  cursor: pointer;
+  flex-grow: 1;
+
+  img {
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+  }
+
+  h2 {
+    font-size: medium;
+    margin: 0;
+  }
+
+  p {
+    font-size: x-small;
+    margin: 0;
+  }
+
+  h2,
+  p {
+    margin: 0;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+}
