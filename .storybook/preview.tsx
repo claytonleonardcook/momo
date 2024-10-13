@@ -61,7 +61,7 @@ const preview: Preview = {
       toc: {
         contentsSelector: ".sbdocs-content",
         headingSelector: "h1, h2, h3",
-        ignoreSelector: "#primary",
+        ignoreSelector: "#primary, .docs-story h2, .docs-story h3",
         title: "Table of Contents",
         disable: false,
         unsafeTocbotOptions: {
