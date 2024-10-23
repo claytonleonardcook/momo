@@ -1,11 +1,14 @@
 // ! Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+mod track;
+
 use std::sync::Mutex;
 
 use include_sqlite_sql::{impl_sql, include_sql};
 use rusqlite::{Connection, Result};
 use tauri::Manager;
+use track::get_all_tracks;
 
 include_sql!("sql/Artists.sql");
 include_sql!("sql/Albums.sql");
@@ -13,8 +16,8 @@ include_sql!("sql/Tracks.sql");
 include_sql!("sql/Playlists.sql");
 include_sql!("sql/PlaylistTracks.sql");
 
-struct GlobalState {
-    conn: Mutex<Connection>,
+pub struct GlobalState {
+    connection: Mutex<Connection>,
 }
 
 #[tauri::command]
@@ -23,28 +26,10 @@ fn greet(name: &str, state: tauri::State<GlobalState>) -> Result<String, String>
         return Err("Provide a valid name!".into());
     }
 
-    let conn = state.conn.lock().unwrap();
-
-    conn.get_all_artists(|row| {
-        let name: &str = row.get_ref("name")?.as_str()?;
-        let artist_id: i64 = row.get_ref("id")?.as_i64()?;
-
-        println!("{}", name);
-
-        conn.insert_album("Rocket", artist_id).unwrap();
-
-        Ok(())
-    })
-    .unwrap();
-
-    conn.get_all_albums(|row| {
-        let name: &str = row.get_ref("name")?.as_str()?;
-
-        println!("{}", name);
-
-        Ok(())
-    })
-    .unwrap();
+    match get_all_tracks(&state) {
+        Ok(tracks) => print!("{:?}", tracks),
+        Err(error) => return Err(error),
+    };
 
     Ok(format!("Hello, {}! You've been greeted from Rust!", name))
 }
@@ -61,7 +46,7 @@ fn main() -> Result<()> {
             conn.insert_artist("Alex G").unwrap();
 
             app.manage(GlobalState {
-                conn: Mutex::new(conn),
+                connection: Mutex::new(conn),
             });
 
             Ok(())

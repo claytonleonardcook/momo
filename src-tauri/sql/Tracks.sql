@@ -12,13 +12,13 @@ CREATE TABLE IF NOT EXISTS Tracks (
 -- Inserts a track into the tracks table
 -- param: name: &str - name of track
 -- param: path: &str - real path to track file
--- param: path: i64 - id of parent album
+-- param: album_id: i64 - id of parent album
 INSERT INTO Tracks (name, path, album_id)
     VALUES (:name, :path, :album_id)
 
 -- name: get_all_tracks?
 -- Get's all tracks from tracks table
-SELECT id, name, album_id FROM Tracks
+SELECT id, name, path, album_id FROM Tracks
 
 -- name: get_tracks_by_artist
 -- Get all tracks for a specific artist
