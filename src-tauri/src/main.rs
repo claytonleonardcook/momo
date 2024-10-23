@@ -8,7 +8,6 @@ use std::sync::Mutex;
 use include_sqlite_sql::{impl_sql, include_sql};
 use rusqlite::{Connection, Result};
 use tauri::Manager;
-use track::get_all_tracks;
 
 include_sql!("sql/Artists.sql");
 include_sql!("sql/Albums.sql");
@@ -17,19 +16,14 @@ include_sql!("sql/Playlists.sql");
 include_sql!("sql/PlaylistTracks.sql");
 
 pub struct GlobalState {
-    connection: Mutex<Connection>,
+    pub connection: Mutex<Connection>,
 }
 
 #[tauri::command]
-fn greet(name: &str, state: tauri::State<GlobalState>) -> Result<String, String> {
+fn greet(name: &str) -> Result<String, String> {
     if name.is_empty() {
         return Err("Provide a valid name!".into());
     }
-
-    match get_all_tracks(&state) {
-        Ok(tracks) => print!("{:?}", tracks),
-        Err(error) => return Err(error),
-    };
 
     Ok(format!("Hello, {}! You've been greeted from Rust!", name))
 }
