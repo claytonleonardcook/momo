@@ -77,7 +77,7 @@ mod tests {
             let aritst_id = connection.insert_artist("Alex G").unwrap();
 
             let album_id = connection
-                .insert_album("Proud", aritst_id.try_into().unwrap())
+                .insert_album("Rocket", aritst_id.try_into().unwrap())
                 .unwrap();
 
             connection
