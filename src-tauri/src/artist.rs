@@ -48,8 +48,6 @@ mod tests {
 
     use super::*;
 
-    include_sql!("sql/Tracks.sql");
-
     #[test]
     fn can_get_all_artists() {
         let state = GlobalState {
