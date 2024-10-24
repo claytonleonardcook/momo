@@ -51,11 +51,9 @@ mod tests {
 
     use rusqlite::Connection;
 
-    use crate::{AlbumsSql, ArtistsSql};
+    use crate::{AlbumsSql, ArtistsSql, TracksSql};
 
     use super::*;
-
-    include_sql!("sql/Tracks.sql");
 
     #[test]
     fn can_get_all_albums() {
