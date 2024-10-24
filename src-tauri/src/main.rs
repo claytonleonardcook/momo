@@ -3,6 +3,7 @@
 
 mod album;
 mod artist;
+mod playlist;
 mod track;
 
 use std::sync::Mutex;
