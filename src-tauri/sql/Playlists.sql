@@ -2,7 +2,7 @@
 -- Creates the playlists table
 CREATE TABLE IF NOT EXISTS Playlists (
     id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL,
+    name TEXT NOT NULL
 )
 
 -- name: insert_playlist
