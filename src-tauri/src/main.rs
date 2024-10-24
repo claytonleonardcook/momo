@@ -2,6 +2,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod album;
+mod artist;
 mod track;
 
 use std::sync::Mutex;
