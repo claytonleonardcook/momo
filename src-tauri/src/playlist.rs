@@ -1,8 +1,6 @@
 use include_sqlite_sql::{impl_sql, include_sql};
 
-use crate::GlobalState;
-
-include_sql!("sql/Playlists.sql");
+use crate::{GlobalState, PlaylistsSql};
 
 #[derive(Clone, Debug)]
 pub struct Playlist {
@@ -38,6 +36,15 @@ pub fn get_all_playlists(state: &GlobalState) -> Result<Vec<Playlist>, String> {
     Ok(playlists.to_vec())
 }
 
+#[tauri::command]
+pub fn create_playlists(name: &str, state: &GlobalState) -> Result<(), String> {
+    let connnection = state.connection.lock().unwrap();
+
+    connnection.insert_playlist(name).unwrap();
+
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use std::sync::Mutex;
@@ -47,7 +54,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn can_get_all_albums() {
+    fn can_get_all_playlists() {
         let state = GlobalState {
             connection: Mutex::new(Connection::open_in_memory().unwrap()),
         };
@@ -63,6 +70,30 @@ mod tests {
 
             connection.insert_playlist("Playlist #3").unwrap();
         }
+
+        let playlists = get_all_playlists(&state).unwrap();
+
+        assert_eq!(
+            format!("{:?}", playlists.to_vec()),
+            r##"[Playlist { id: 1, name: "Playlist #1" }, Playlist { id: 2, name: "Playlist #2" }, Playlist { id: 3, name: "Playlist #3" }]"##,
+        );
+    }
+
+    #[test]
+    fn can_create_playlists() {
+        let state = GlobalState {
+            connection: Mutex::new(Connection::open_in_memory().unwrap()),
+        };
+
+        {
+            let connection = state.connection.lock().unwrap();
+
+            connection.create_playlists_table().unwrap();
+        }
+
+        create_playlists("Playlist #1", &state).unwrap();
+        create_playlists("Playlist #2", &state).unwrap();
+        create_playlists("Playlist #3", &state).unwrap();
 
         let playlists = get_all_playlists(&state).unwrap();
 
