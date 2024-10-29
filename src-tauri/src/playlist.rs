@@ -41,7 +41,7 @@ pub fn get_all_playlists(state: &GlobalState) -> Result<Vec<Playlist>, String> {
 }
 
 #[tauri::command]
-pub fn create_playlists(name: &str, state: &GlobalState) -> Result<(), String> {
+pub fn create_playlist(name: &str, state: &GlobalState) -> Result<(), String> {
     let connnection = state.connection.lock().unwrap();
 
     connnection.insert_playlist(name).unwrap();
@@ -84,7 +84,7 @@ mod tests {
     }
 
     #[test]
-    fn can_create_playlists() {
+    fn can_create_playlist() {
         let state = GlobalState {
             connection: Mutex::new(Connection::open_in_memory().unwrap()),
         };
@@ -95,9 +95,9 @@ mod tests {
             connection.create_playlists_table().unwrap();
         }
 
-        create_playlists("Playlist #1", &state).unwrap();
-        create_playlists("Playlist #2", &state).unwrap();
-        create_playlists("Playlist #3", &state).unwrap();
+        create_playlist("Playlist #1", &state).unwrap();
+        create_playlist("Playlist #2", &state).unwrap();
+        create_playlist("Playlist #3", &state).unwrap();
 
         let playlists = get_all_playlists(&state).unwrap();
 
