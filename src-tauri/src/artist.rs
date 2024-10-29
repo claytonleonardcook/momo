@@ -1,10 +1,8 @@
-use include_sqlite_sql::{impl_sql, include_sql};
-
 use crate::GlobalState;
 
-include_sql!("sql/Artists.sql");
+use crate::ArtistsSql;
 
-#[derive(Clone, Debug)]
+#[derive(Debug)]
 pub struct Artist {
     #[allow(dead_code)]
     pub id: i64,
@@ -15,6 +13,12 @@ pub struct Artist {
 impl Artist {
     pub fn new(id: i64, name: String) -> Artist {
         Artist { id, name }
+    }
+}
+
+impl std::clone::Clone for Artist {
+    fn clone(&self) -> Self {
+        Artist::new(self.id, self.name.clone())
     }
 }
 

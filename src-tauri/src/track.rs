@@ -1,10 +1,8 @@
-use include_sqlite_sql::{impl_sql, include_sql};
-
 use crate::GlobalState;
 
-include_sql!("sql/Tracks.sql");
+use crate::TracksSql;
 
-#[derive(Clone, Debug)]
+#[derive(Debug)]
 pub struct Track {
     #[allow(dead_code)]
     pub id: i64,
@@ -24,6 +22,12 @@ impl Track {
             path,
             album_id,
         }
+    }
+}
+
+impl std::clone::Clone for Track {
+    fn clone(&self) -> Self {
+        Track::new(self.id, self.name.clone(), self.path.clone(), self.album_id)
     }
 }
 
