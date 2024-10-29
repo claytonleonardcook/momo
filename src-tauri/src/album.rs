@@ -4,11 +4,8 @@ use crate::AlbumsSql;
 
 #[derive(Debug)]
 pub struct Album {
-    #[allow(dead_code)]
     pub id: i64,
-    #[allow(dead_code)]
     pub name: String,
-    #[allow(dead_code)]
     pub artist_id: i64,
 }
 

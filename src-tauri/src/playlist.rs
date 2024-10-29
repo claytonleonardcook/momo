@@ -2,9 +2,7 @@ use crate::{GlobalState, PlaylistsSql};
 
 #[derive(Debug)]
 pub struct Playlist {
-    #[allow(dead_code)]
     pub id: i64,
-    #[allow(dead_code)]
     pub name: String,
 }
 

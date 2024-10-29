@@ -4,9 +4,7 @@ use crate::ArtistsSql;
 
 #[derive(Debug)]
 pub struct Artist {
-    #[allow(dead_code)]
     pub id: i64,
-    #[allow(dead_code)]
     pub name: String,
 }
 
@@ -48,8 +46,7 @@ mod tests {
 
     use rusqlite::Connection;
 
-    use crate::ArtistsSql;
-
+    #[allow(dead_code)]
     use super::*;
 
     #[test]

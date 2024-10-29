@@ -4,13 +4,9 @@ use crate::TracksSql;
 
 #[derive(Debug)]
 pub struct Track {
-    #[allow(dead_code)]
     pub id: i64,
-    #[allow(dead_code)]
     pub name: String,
-    #[allow(dead_code)]
     pub path: String,
-    #[allow(dead_code)]
     pub album_id: i64,
 }
 
