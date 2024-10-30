@@ -1,4 +1,4 @@
-name: Rust Tests
+name: Tests
 
 on:
   push:
@@ -26,7 +26,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cargo/registry
-          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/src-tauri/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-registry-
 
@@ -34,20 +34,22 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cargo/index
-          key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/src-tauri/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-index-
 
       - name: Cache Cargo build
         uses: actions/cache@v3
         with:
-          path: target
-          key: ${{ runner.os }}-cargo-build-${{ hashFiles('**/Cargo.lock') }}
+          path: src-tauri/target
+          key: ${{ runner.os }}-cargo-build-${{ hashFiles('**/src-tauri/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-build-
 
       - name: Run unit tests
+        working-directory: src-tauri
         run: cargo test --lib
 
       - name: Run integration tests
+        working-directory: src-tauri
         run: cargo test --test '*'
