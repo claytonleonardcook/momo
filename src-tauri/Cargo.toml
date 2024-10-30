@@ -17,6 +17,9 @@ serde_json = "1"
 rusqlite = { version = "0.32.0", features = ["bundled"] }
 include-sqlite-sql = "0.2"
 
+[lib]
+path = "src/mod.rs"
+
 [features]
 # This feature is used for production builds or when a dev server is not specified, DO NOT REMOVE!!
 custom-protocol = ["tauri/custom-protocol"]
