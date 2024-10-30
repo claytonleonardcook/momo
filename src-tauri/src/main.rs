@@ -1,26 +1,17 @@
 // ! Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-mod album;
-mod artist;
-mod playlist;
-mod track;
-
-use std::sync::Mutex;
-
 use include_sqlite_sql::{impl_sql, include_sql};
+use momo::GlobalState;
 use rusqlite::{Connection, Result};
+use std::sync::Mutex;
 use tauri::Manager;
 
-include_sql!("sql/Artists.sql");
-include_sql!("sql/Albums.sql");
 include_sql!("sql/Tracks.sql");
+include_sql!("sql/Albums.sql");
+include_sql!("sql/Artists.sql");
 include_sql!("sql/Playlists.sql");
 include_sql!("sql/PlaylistTracks.sql");
-
-pub struct GlobalState {
-    pub connection: Mutex<Connection>,
-}
 
 #[tauri::command]
 fn greet(name: &str) -> Result<String, String> {
@@ -34,16 +25,17 @@ fn greet(name: &str) -> Result<String, String> {
 fn main() -> Result<()> {
     tauri::Builder::default()
         .setup(|app| {
-            let conn = Connection::open_in_memory().unwrap();
+            let connection = Connection::open_in_memory().unwrap();
 
-            conn.create_artists_table().unwrap();
-            conn.create_albums_table().unwrap();
-            conn.create_tracks_table().unwrap();
+            connection.create_artists_table().unwrap();
+            connection.create_albums_table().unwrap();
+            connection.create_tracks_table().unwrap();
+            connection.create_playlist_tracks_table().unwrap();
 
-            conn.insert_artist("Alex G").unwrap();
+            connection.insert_artist("Alex G", |_row| Ok(())).unwrap();
 
             app.manage(GlobalState {
-                connection: Mutex::new(conn),
+                connection: Mutex::new(connection),
             });
 
             Ok(())

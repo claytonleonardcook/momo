@@ -1,6 +1,7 @@
 use crate::GlobalState;
+use include_sqlite_sql::{impl_sql, include_sql};
 
-use crate::ArtistsSql;
+include_sql!("sql/Artists.sql");
 
 #[derive(Debug)]
 pub struct Artist {
@@ -46,7 +47,6 @@ mod tests {
 
     use rusqlite::Connection;
 
-    #[allow(dead_code)]
     use super::*;
 
     #[test]
@@ -60,9 +60,13 @@ mod tests {
 
             connection.create_artists_table().unwrap();
 
-            connection.insert_artist("Alex G").unwrap();
-            connection.insert_artist("Lizzy McAlpine").unwrap();
-            connection.insert_artist("The Daughters of Eve").unwrap();
+            connection.insert_artist("Alex G", |_row| Ok(())).unwrap();
+            connection
+                .insert_artist("Lizzy McAlpine", |_row| Ok(()))
+                .unwrap();
+            connection
+                .insert_artist("The Daughters of Eve", |_row| Ok(()))
+                .unwrap();
         }
 
         let artists = get_all_artists(&state).unwrap();
