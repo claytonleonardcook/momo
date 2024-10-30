@@ -5,11 +5,12 @@ CREATE TABLE IF NOT EXISTS Artists (
     name TEXT NOT NULL
 )
 
--- name: insert_artist
+-- name: insert_artist->
 -- Inserts a artist into the artists table
 -- param: name: &str - name of artist
 INSERT INTO Artists (name)
     VALUES (:name)
+    RETURNING id
 
 -- name: get_all_artists?
 -- Gets all artists from artists table
@@ -19,4 +20,4 @@ SELECT id, name FROM Artists
 -- Deletes an artist by id
 -- param: artist_id: i64 - the id of the artist to delete
 DELETE FROM Artists
-    WHERE id = :artist_id;
+    WHERE id = :artist_id
