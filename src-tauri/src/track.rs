@@ -1,6 +1,7 @@
 use crate::GlobalState;
+use include_sqlite_sql::{impl_sql, include_sql};
 
-use crate::TracksSql;
+include_sql!("sql/Tracks.sql");
 
 #[derive(Debug)]
 pub struct Track {
@@ -51,13 +52,12 @@ pub fn get_all_tracks(state: &GlobalState) -> Result<Vec<Track>, String> {
 
 #[cfg(test)]
 mod tests {
+    use super::*;
+    use rusqlite::Connection;
     use std::sync::Mutex;
 
-    use rusqlite::Connection;
-
-    use crate::{AlbumsSql, ArtistsSql};
-
-    use super::*;
+    include_sql!("sql/Albums.sql");
+    include_sql!("sql/Artists.sql");
 
     #[test]
     fn can_get_all_tracks() {
@@ -69,23 +69,25 @@ mod tests {
             let connection = state.connection.lock().unwrap();
 
             connection.create_artists_table().unwrap();
-
             connection.create_albums_table().unwrap();
-
             connection.create_tracks_table().unwrap();
 
-            let aritst_id = connection.insert_artist("Alex G").unwrap();
+            let aritst_id = connection
+                .insert_artist("Alex G", |row| Ok(row.get_ref("id")?.as_i64()?))
+                .unwrap();
 
             let album_id = connection
-                .insert_album("Rocket", aritst_id.try_into().unwrap())
+                .insert_album("Rocket", aritst_id, |row| {
+                    Ok(row.get_ref("id")?.as_i64()?)
+                })
                 .unwrap();
 
             connection
-                .insert_track("Bobby", "./hello", album_id.try_into().unwrap())
+                .insert_track("Bobby", "./hello", album_id, |_row| Ok(()))
                 .unwrap();
 
             connection
-                .insert_track("Proud", "./world", album_id.try_into().unwrap())
+                .insert_track("Proud", "./world", album_id, |_row| Ok(()))
                 .unwrap();
         }
 
