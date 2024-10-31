@@ -21,10 +21,10 @@ INSERT INTO Tracks (name, path, album_id)
 -- Get's all tracks from tracks table
 SELECT id, name, path, album_id FROM Tracks
 
--- name: get_tracks_by_artist
+-- name: get_tracks_by_artist?
 -- Get all tracks for a specific artist
 -- param: artist_id: i64 - the id of the artist
-SELECT Tracks.id, Tracks.name, Tracks.album_id
+SELECT Tracks.id, Tracks.name, Tracks.path, Tracks.album_id
     FROM Tracks
     JOIN Albums ON Tracks.album_id = Albums.id
     JOIN Artists ON Albums.artist_id = Artists.id
