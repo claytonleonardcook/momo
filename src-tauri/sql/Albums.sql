@@ -19,7 +19,7 @@ INSERT INTO Albums (name, artist_id)
 -- Get's all albums from albums table
 SELECT id, name, artist_id FROM Albums
 
--- name: get_albums_by_artist
+-- name: get_albums_by_artist?
 -- Get all albums for a specific artist
 -- param: artist_id: i64 - the id of the artist
 SELECT id, name, artist_id
