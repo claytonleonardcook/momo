@@ -72,6 +72,28 @@ pub fn get_tracks_by_artist(artist_id: i64, state: &GlobalState) -> Result<Vec<T
     Ok(tracks.to_vec())
 }
 
+#[tauri::command]
+pub fn get_tracks_by_album(album_id: i64, state: &GlobalState) -> Result<Vec<Track>, String> {
+    let connnection = state.connection.lock().unwrap();
+
+    let tracks = &mut Vec::new();
+
+    connnection
+        .get_tracks_by_album(album_id, |row| {
+            let id: i64 = row.get_ref("id")?.as_i64()?;
+            let name: String = row.get_ref("name")?.as_str()?.to_string();
+            let path: String = row.get_ref("path")?.as_str()?.to_string();
+            let album_id: i64 = row.get_ref("album_id")?.as_i64()?;
+
+            tracks.push(Track::new(id, name, path, album_id));
+
+            Ok(())
+        })
+        .unwrap();
+
+    Ok(tracks.to_vec())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -170,6 +192,46 @@ mod tests {
         assert_eq!(
             format!("{:?}", tracks.to_vec()),
             r##"[Track { id: 1, name: "Bobby", path: "./hello", album_id: 1 }, Track { id: 2, name: "Proud", path: "./world", album_id: 1 }, Track { id: 3, name: "Memory", path: "./memory", album_id: 2 }]"##,
+        );
+    }
+
+    #[test]
+    fn can_get_tracks_by_album() {
+        let state = GlobalState {
+            connection: Mutex::new(Connection::open_in_memory().unwrap()),
+        };
+
+        {
+            let connection = state.connection.lock().unwrap();
+
+            connection.create_artists_table().unwrap();
+            connection.create_albums_table().unwrap();
+            connection.create_tracks_table().unwrap();
+
+            let artist_id = connection
+                .insert_artist("Alex G", |row| Ok(row.get_ref("id")?.as_i64()?))
+                .unwrap();
+
+            let album_id = connection
+                .insert_album("Rocket", artist_id, |row| {
+                    Ok(row.get_ref("id")?.as_i64()?)
+                })
+                .unwrap();
+
+            connection
+                .insert_track("Bobby", "./hello", album_id, |_row| Ok(()))
+                .unwrap();
+
+            connection
+                .insert_track("Proud", "./world", album_id, |_row| Ok(()))
+                .unwrap();
+        }
+
+        let tracks = get_tracks_by_album(1, &state).unwrap();
+
+        assert_eq!(
+            format!("{:?}", tracks.to_vec()),
+            r##"[Track { id: 1, name: "Bobby", path: "./hello", album_id: 1 }, Track { id: 2, name: "Proud", path: "./world", album_id: 1 }]"##,
         );
     }
 }

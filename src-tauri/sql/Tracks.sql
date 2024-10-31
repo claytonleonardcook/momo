@@ -30,7 +30,7 @@ SELECT Tracks.id, Tracks.name, Tracks.path, Tracks.album_id
     JOIN Artists ON Albums.artist_id = Artists.id
     WHERE Artists.id = :artist_id
 
--- name: get_tracks_by_album
+-- name: get_tracks_by_album?
 -- Get all tracks for a specific album
 -- param: album_id: i64 - the id of the album
 SELECT id, name, path, album_id
