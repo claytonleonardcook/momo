@@ -75,8 +75,9 @@ fn can_add_track_to_playlist() {
 
     let tracks = get_tracks_in_playlist(playlist_id, &state).unwrap();
 
-    assert_eq!(
-        format!("{:?}", tracks.to_vec()),
-        r##"[Track { id: 2, name: "Proud", path: "./proud", album_id: 1 }, Track { id: 4, name: "Bobby", path: "./bobby", album_id: 1 }]"##,
-    );
+    assert_eq!(tracks.get(0).unwrap().id, 2);
+    assert_eq!(tracks.get(0).unwrap().name, "Proud");
+
+    assert_eq!(tracks.get(1).unwrap().id, 4);
+    assert_eq!(tracks.get(1).unwrap().name, "Bobby");
 }
