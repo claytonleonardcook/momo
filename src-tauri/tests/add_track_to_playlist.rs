@@ -7,6 +7,8 @@ use momo::{
 use rusqlite::Connection;
 use std::sync::Mutex;
 
+mod common;
+
 include_sql!("sql/Tracks.sql");
 include_sql!("sql/Albums.sql");
 include_sql!("sql/Artists.sql");
@@ -19,36 +21,14 @@ fn can_add_track_to_playlist() {
         connection: Mutex::new(Connection::open_in_memory().unwrap()),
     };
 
-    {
-        let connection = state.connection.lock().unwrap();
-
-        connection.create_tracks_table().unwrap();
-        connection.create_albums_table().unwrap();
-        connection.create_artists_table().unwrap();
-        connection.create_playlists_table().unwrap();
-        connection.create_playlist_tracks_table().unwrap();
-    }
+    common::create_tables(&state).unwrap();
 
     let playlist_id = create_playlist("Playlist #1", &state).unwrap();
 
     {
-        let connection = state.connection.lock().unwrap();
+        let artist_id = common::create_artist("Alex G", &state).unwrap();
 
-        let artist_id = connection
-            .insert_artist("Alex G", |row| {
-                let artist_id = row.get_ref("id")?.as_i64()?;
-
-                Ok(artist_id)
-            })
-            .unwrap();
-
-        let album_id = connection
-            .insert_album("Rocket", artist_id, |row| {
-                let album_id = row.get_ref("id")?.as_i64()?;
-
-                Ok(album_id)
-            })
-            .unwrap();
+        let album_id = common::create_album("Rocket", artist_id, &state).unwrap();
 
         for track in vec!["Poison Root", "Proud", "County", "Bobby"]
             .iter()
@@ -57,9 +37,7 @@ fn can_add_track_to_playlist() {
             let name = track;
             let path = format!("./{}", track.to_ascii_lowercase().trim());
 
-            connection
-                .insert_track(name, &path, album_id, |_row| Ok(()))
-                .unwrap();
+            common::create_track(name, &path, album_id, &state).unwrap();
         }
     }
 

@@ -3,6 +3,8 @@ use momo::{artist::get_all_artists, GlobalState};
 use rusqlite::Connection;
 use std::sync::Mutex;
 
+mod common;
+
 include_sql!("sql/Tracks.sql");
 include_sql!("sql/Albums.sql");
 include_sql!("sql/Artists.sql");
@@ -15,19 +17,11 @@ fn can_get_all_artists() {
         connection: Mutex::new(Connection::open_in_memory().unwrap()),
     };
 
-    {
-        let connection = state.connection.lock().unwrap();
+    common::create_tables(&state).unwrap();
 
-        connection.create_artists_table().unwrap();
-
-        connection.insert_artist("Alex G", |_row| Ok(())).unwrap();
-        connection
-            .insert_artist("Lizzy McAlpine", |_row| Ok(()))
-            .unwrap();
-        connection
-            .insert_artist("The Daughters of Eve", |_row| Ok(()))
-            .unwrap();
-    }
+    common::create_artist("Alex G", &state).unwrap();
+    common::create_artist("Lizzy McAlpine", &state).unwrap();
+    common::create_artist("The Daughters of Eve", &state).unwrap();
 
     let artists = get_all_artists(&state).unwrap();
 

@@ -3,6 +3,8 @@ use momo::{playlist::create_playlist, playlist::get_all_playlists, GlobalState};
 use rusqlite::Connection;
 use std::sync::Mutex;
 
+mod common;
+
 include_sql!("sql/Tracks.sql");
 include_sql!("sql/Albums.sql");
 include_sql!("sql/Artists.sql");
@@ -15,11 +17,7 @@ fn can_create_playlist() {
         connection: Mutex::new(Connection::open_in_memory().unwrap()),
     };
 
-    {
-        let connection = state.connection.lock().unwrap();
-
-        connection.create_playlists_table().unwrap();
-    }
+    common::create_tables(&state).unwrap();
 
     create_playlist("Playlist #1", &state).unwrap();
     create_playlist("Playlist #2", &state).unwrap();
