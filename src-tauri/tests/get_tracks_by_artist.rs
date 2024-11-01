@@ -3,6 +3,8 @@ use momo::{track::get_tracks_by_artist, GlobalState};
 use rusqlite::Connection;
 use std::sync::Mutex;
 
+mod common;
+
 include_sql!("sql/Tracks.sql");
 include_sql!("sql/Albums.sql");
 include_sql!("sql/Artists.sql");
@@ -15,41 +17,22 @@ fn can_get_tracks_by_artist() {
         connection: Mutex::new(Connection::open_in_memory().unwrap()),
     };
 
+    common::create_tables(&state).unwrap();
+
     {
-        let connection = state.connection.lock().unwrap();
-
-        connection.create_artists_table().unwrap();
-        connection.create_albums_table().unwrap();
-        connection.create_tracks_table().unwrap();
-
-        let artist_id = connection
-            .insert_artist("Alex G", |row| Ok(row.get_ref("id")?.as_i64()?))
-            .unwrap();
+        let artist_id = common::create_artist("Alex G", &state).unwrap();
 
         {
-            let album_id = connection
-                .insert_album("Rocket", artist_id, |row| {
-                    Ok(row.get_ref("id")?.as_i64()?)
-                })
-                .unwrap();
+            let album_id = common::create_album("Rocket", artist_id, &state).unwrap();
 
-            connection
-                .insert_track("Bobby", "./hello", album_id, |_row| Ok(()))
-                .unwrap();
-
-            connection
-                .insert_track("Proud", "./world", album_id, |_row| Ok(()))
-                .unwrap();
+            common::create_track("Bobby", "./bobby", album_id, &state).unwrap();
+            common::create_track("Proud", "./proud", album_id, &state).unwrap();
         }
 
         {
-            let album_id = connection
-                .insert_album("Trick", artist_id, |row| Ok(row.get_ref("id")?.as_i64()?))
-                .unwrap();
+            let album_id = common::create_album("Trick", artist_id, &state).unwrap();
 
-            connection
-                .insert_track("Memory", "./memory", album_id, |_row| Ok(()))
-                .unwrap();
+            common::create_track("Memory", "./memory", album_id, &state).unwrap();
         }
     }
 
