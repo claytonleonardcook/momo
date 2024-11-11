@@ -20,13 +20,13 @@ fn can_get_albums_by_artist() {
     common::create_tables(&state).unwrap();
 
     {
-        let artist_id = common::create_artist("Alex G", &state).unwrap();
+        let artist_name = common::create_artist("Alex G", &state).unwrap();
 
-        common::create_album("Rocket", artist_id, &state).unwrap();
-        common::create_album("Trick", artist_id, &state).unwrap();
+        common::create_album("Rocket", artist_name.as_str(), &state).unwrap();
+        common::create_album("Trick", artist_name.as_str(), &state).unwrap();
     }
 
-    let albums = get_albums_by_artist(1, &state).unwrap();
+    let albums = get_albums_by_artist("Alex G", &state).unwrap();
 
     assert_eq!(albums.get(0).unwrap().id, 1);
     assert_eq!(albums.get(0).unwrap().name, "Rocket");
