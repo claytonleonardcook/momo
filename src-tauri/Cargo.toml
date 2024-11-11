@@ -16,6 +16,7 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 rusqlite = { version = "0.32.0", features = ["bundled"] }
 include-sqlite-sql = "0.2"
+audiotags = "0.5.0"
 
 [lib]
 path = "src/mod.rs"
