@@ -7,22 +7,22 @@ include_sql!("sql/Albums.sql");
 pub struct Album {
     pub id: i64,
     pub name: String,
-    pub artist_id: i64,
+    pub artist_name: String,
 }
 
 impl Album {
-    pub fn new(id: i64, name: String, artist_id: i64) -> Album {
+    pub fn new(id: i64, name: String, artist_name: String) -> Album {
         Album {
             id,
             name,
-            artist_id,
+            artist_name,
         }
     }
 }
 
 impl std::clone::Clone for Album {
     fn clone(&self) -> Self {
-        Album::new(self.id, self.name.clone(), self.artist_id)
+        Album::new(self.id, self.name.clone(), self.artist_name.clone())
     }
 }
 
@@ -36,9 +36,9 @@ pub fn get_all_albums(state: &GlobalState) -> Result<Vec<Album>, String> {
         .get_all_albums(|row| {
             let id: i64 = row.get_ref("id")?.as_i64()?;
             let name: String = row.get_ref("name")?.as_str()?.to_string();
-            let artist_id: i64 = row.get_ref("artist_id")?.as_i64()?;
+            let artist_name: String = row.get_ref("artist_name")?.as_str()?.to_string();
 
-            albums.push(Album::new(id, name, artist_id));
+            albums.push(Album::new(id, name, artist_name));
 
             Ok(())
         })
@@ -48,18 +48,18 @@ pub fn get_all_albums(state: &GlobalState) -> Result<Vec<Album>, String> {
 }
 
 #[tauri::command]
-pub fn get_albums_by_artist(artist_id: i64, state: &GlobalState) -> Result<Vec<Album>, String> {
+pub fn get_albums_by_artist(artist_name: &str, state: &GlobalState) -> Result<Vec<Album>, String> {
     let connnection = state.connection.lock().unwrap();
 
     let albums = &mut Vec::new();
 
     connnection
-        .get_albums_by_artist(artist_id, |row| {
+        .get_albums_by_artist(artist_name, |row| {
             let id: i64 = row.get_ref("id")?.as_i64()?;
             let name: String = row.get_ref("name")?.as_str()?.to_string();
-            let artist_id: i64 = row.get_ref("artist_id")?.as_i64()?;
+            let artist_name: String = row.get_ref("artist_name")?.as_str()?.to_string();
 
-            albums.push(Album::new(id, name, artist_id));
+            albums.push(Album::new(id, name, artist_name));
 
             Ok(())
         })
