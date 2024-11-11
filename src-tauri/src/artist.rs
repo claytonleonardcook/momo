@@ -5,19 +5,18 @@ include_sql!("sql/Artists.sql");
 
 #[derive(Debug)]
 pub struct Artist {
-    pub id: i64,
     pub name: String,
 }
 
 impl Artist {
-    pub fn new(id: i64, name: String) -> Artist {
-        Artist { id, name }
+    pub fn new(name: String) -> Artist {
+        Artist { name }
     }
 }
 
 impl std::clone::Clone for Artist {
     fn clone(&self) -> Self {
-        Artist::new(self.id, self.name.clone())
+        Artist::new(self.name.clone())
     }
 }
 
@@ -29,10 +28,9 @@ pub fn get_all_artists(state: &GlobalState) -> Result<Vec<Artist>, String> {
 
     connnection
         .get_all_artists(|row| {
-            let id: i64 = row.get_ref("id")?.as_i64()?;
             let name: String = row.get_ref("name")?.as_str()?.to_string();
 
-            artists.push(Artist::new(id, name));
+            artists.push(Artist::new(name));
 
             Ok(())
         })

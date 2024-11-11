@@ -25,12 +25,9 @@ fn can_get_all_artists() {
 
     let artists = get_all_artists(&state).unwrap();
 
-    assert_eq!(artists.get(0).unwrap().id, 1);
     assert_eq!(artists.get(0).unwrap().name, "Alex G");
 
-    assert_eq!(artists.get(1).unwrap().id, 2);
     assert_eq!(artists.get(1).unwrap().name, "Lizzy McAlpine");
 
-    assert_eq!(artists.get(2).unwrap().id, 3);
     assert_eq!(artists.get(2).unwrap().name, "The Daughters of Eve");
 }
