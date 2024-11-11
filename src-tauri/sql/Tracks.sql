@@ -1,7 +1,7 @@
 -- name: create_tracks_table
 -- Creates the tracks table
 CREATE TABLE IF NOT EXISTS Tracks (
-    id INTEGER PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     path TEXT NOT NULL,
     album_id INTEGER NOT NULL,
@@ -17,18 +17,25 @@ INSERT INTO Tracks (name, path, album_id)
     VALUES (:name, :path, :album_id)
     RETURNING id
 
+-- name: get_track_path_by_id->
+-- Get's a track's path by id from tracks table
+-- param: track_id: i64 - the id of the track
+SELECT id, path 
+    FROM Tracks 
+    WHERE id = :track_id
+
 -- name: get_all_tracks?
 -- Get's all tracks from tracks table
 SELECT id, name, path, album_id FROM Tracks
 
 -- name: get_tracks_by_artist?
 -- Get all tracks for a specific artist
--- param: artist_id: i64 - the id of the artist
-SELECT Tracks.id, Tracks.name, Tracks.path, Tracks.album_id
+-- param: artist_name: &str - the name of the artist
+SELECT Tracks.id AS id, Tracks.name, Tracks.path, Tracks.album_id, Albums.name as album_name, Artists.name as artist_name
     FROM Tracks
     JOIN Albums ON Tracks.album_id = Albums.id
-    JOIN Artists ON Albums.artist_id = Artists.id
-    WHERE Artists.id = :artist_id
+    JOIN Artists ON Albums.artist_name = Artists.name
+    WHERE Artists.name = :artist_name
 
 -- name: get_tracks_by_album?
 -- Get all tracks for a specific album

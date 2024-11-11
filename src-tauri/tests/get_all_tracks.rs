@@ -20,9 +20,9 @@ fn can_get_all_tracks() {
     common::create_tables(&state).unwrap();
 
     {
-        let artist_id = common::create_artist("Alex G", &state).unwrap();
+        let artist_name = common::create_artist("Alex G", &state).unwrap();
 
-        let album_id = common::create_album("Rocket", artist_id, &state).unwrap();
+        let album_id = common::create_album("Rocket", artist_name.as_str(), &state).unwrap();
 
         common::create_track("Bobby", "./bobby", album_id, &state).unwrap();
         common::create_track("Proud", "./proud", album_id, &state).unwrap();

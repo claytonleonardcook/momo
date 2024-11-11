@@ -26,9 +26,9 @@ fn can_add_track_to_playlist() {
     let playlist_id = create_playlist("Playlist #1", &state).unwrap();
 
     {
-        let artist_id = common::create_artist("Alex G", &state).unwrap();
+        let artist_name = common::create_artist("Alex G", &state).unwrap();
 
-        let album_id = common::create_album("Rocket", artist_id, &state).unwrap();
+        let album_id = common::create_album("Rocket", artist_name.as_str(), &state).unwrap();
 
         for track in vec!["Poison Root", "Proud", "County", "Bobby"]
             .iter()
