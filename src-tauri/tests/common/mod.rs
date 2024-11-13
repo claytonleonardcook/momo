@@ -1,5 +1,8 @@
+use std::sync::Mutex;
+
 use include_sqlite_sql::{impl_sql, include_sql};
 use momo::GlobalState;
+use tauri::State;
 
 include_sql!("sql/Tracks.sql");
 include_sql!("sql/Albums.sql");
@@ -7,7 +10,8 @@ include_sql!("sql/Artists.sql");
 include_sql!("sql/Playlists.sql");
 include_sql!("sql/PlaylistTracks.sql");
 
-pub fn create_tables(state: &GlobalState) -> Result<(), ()> {
+pub fn create_tables(global_state: &State<Mutex<GlobalState>>) -> Result<(), ()> {
+    let state = global_state.lock().unwrap();
     let connection = state.connection.lock().unwrap();
 
     connection.create_artists_table().unwrap();
@@ -21,7 +25,8 @@ pub fn create_tables(state: &GlobalState) -> Result<(), ()> {
 
 // TODO: fix dead code warning
 #[allow(dead_code)]
-pub fn create_artist(name: &str, state: &GlobalState) -> Result<String, ()> {
+pub fn create_artist(name: &str, global_state: &State<Mutex<GlobalState>>) -> Result<String, ()> {
+    let state = global_state.lock().unwrap();
     let connection = state.connection.lock().unwrap();
 
     Ok(connection
@@ -31,7 +36,11 @@ pub fn create_artist(name: &str, state: &GlobalState) -> Result<String, ()> {
 
 // TODO: fix dead code warning
 #[allow(dead_code)]
-pub fn print_all_tracks_by_artist(artist_name: &str, state: &GlobalState) -> Result<(), ()> {
+pub fn print_all_tracks_by_artist(
+    artist_name: &str,
+    global_state: &State<Mutex<GlobalState>>,
+) -> Result<(), ()> {
+    let state = global_state.lock().unwrap();
     let connection = state.connection.lock().unwrap();
 
     println!(
@@ -61,7 +70,12 @@ pub fn print_all_tracks_by_artist(artist_name: &str, state: &GlobalState) -> Res
 
 // TODO: fix dead code warning
 #[allow(dead_code)]
-pub fn create_album(name: &str, artist_name: &str, state: &GlobalState) -> Result<i64, ()> {
+pub fn create_album(
+    name: &str,
+    artist_name: &str,
+    global_state: &State<Mutex<GlobalState>>,
+) -> Result<i64, ()> {
+    let state = global_state.lock().unwrap();
     let connection = state.connection.lock().unwrap();
 
     Ok(connection
@@ -71,7 +85,13 @@ pub fn create_album(name: &str, artist_name: &str, state: &GlobalState) -> Resul
 
 // TODO: fix dead code warning
 #[allow(dead_code)]
-pub fn create_track(name: &str, path: &str, album_id: i64, state: &GlobalState) -> Result<i64, ()> {
+pub fn create_track(
+    name: &str,
+    path: &str,
+    album_id: i64,
+    global_state: &State<Mutex<GlobalState>>,
+) -> Result<i64, ()> {
+    let state = global_state.lock().unwrap();
     let connection = state.connection.lock().unwrap();
 
     Ok(connection
@@ -83,7 +103,8 @@ pub fn create_track(name: &str, path: &str, album_id: i64, state: &GlobalState) 
 
 // TODO: fix dead code warning
 #[allow(dead_code)]
-pub fn create_playlist(name: &str, state: &GlobalState) -> Result<i64, ()> {
+pub fn create_playlist(name: &str, global_state: &State<Mutex<GlobalState>>) -> Result<i64, ()> {
+    let state = global_state.lock().unwrap();
     let connection = state.connection.lock().unwrap();
 
     Ok(connection
