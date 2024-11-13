@@ -38,6 +38,16 @@ fn play(global_state: State<Mutex<GlobalState>>) -> Result<(), String> {
     Ok(())
 }
 
+#[tauri::command]
+fn set_volume(volume: f32, global_state: State<Mutex<GlobalState>>) -> Result<(), String> {
+    let state = global_state.lock().unwrap();
+
+    let sink = state.sink.as_ref().unwrap();
+    sink.set_volume(volume);
+
+    Ok(())
+}
+
 fn main() -> Result<()> {
     let (_stream, stream_handle) = OutputStream::try_default().unwrap();
     let sink = Sink::try_new(&stream_handle).unwrap();
@@ -106,7 +116,12 @@ fn main() -> Result<()> {
 
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![pause, play, track::get_all_tracks])
+        .invoke_handler(tauri::generate_handler![
+            pause,
+            play,
+            set_volume,
+            track::get_all_tracks
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 

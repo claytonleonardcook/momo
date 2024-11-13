@@ -26,7 +26,7 @@ const TrackControls = ({
   ...props
 }: TrackControlsProps) => {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [volume, setVolume] = useState(0);
+  const [volume, setVolume] = useState<number>(1);
 
   function onVolumeChange(value: number | number[]) {
     if (typeof value === "number") {
@@ -36,7 +36,9 @@ const TrackControls = ({
 
   function onVolumeChangeEnd(value: number | number[]) {
     if (typeof value === "number") {
-      console.log(`Change volume to ${volume}%`);
+      invoke("set_volume", {
+        volume,
+      }).catch(console.error);
     }
   }
 
@@ -115,6 +117,9 @@ const TrackControls = ({
           className={styles["track-controls--volume__track"]}
           color={"blue"}
           value={volume}
+          minValue={0}
+          maxValue={2}
+          step={0.01}
           onChangeEnd={onVolumeChangeEnd}
           onChange={onVolumeChange}
         >
