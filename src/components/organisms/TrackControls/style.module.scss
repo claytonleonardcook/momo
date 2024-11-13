@@ -23,16 +23,4 @@
       padding: 0 32px;
     }
   }
-
-  &--volume {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    flex: 1;
-
-    &__track {
-      height: 16px;
-      padding: 0 16px;
-    }
-  }
 }

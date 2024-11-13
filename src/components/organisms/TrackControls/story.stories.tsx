@@ -6,7 +6,7 @@ import TrackControls from ".";
  * TODO: Write documentation.
  */
 const meta: Meta<typeof TrackControls> = {
-  title: "Components/Molecules/TrackControls",
+  title: "Components/Organisms/TrackControls",
   component: TrackControls,
   parameters: {
     layout: "fullscreen",

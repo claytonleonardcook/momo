@@ -14,6 +14,7 @@ import {
 import { FaRepeat, FaShuffle, FaVolumeHigh } from "react-icons/fa6";
 import { PressEvent } from "react-aria-components";
 import { invoke } from "@tauri-apps/api";
+import VolumeSlider from "@/components/molecules/VolumeSlider";
 
 type TrackControlsProps = HTMLAttributes<HTMLDivElement> & {
   trackDuration: number;
@@ -111,21 +112,10 @@ const TrackControls = ({
         </Slider>
         <span>3:46</span>
       </div>
-      <div className={styles["track-controls--volume"]}>
-        <Icon icon={volume === 0 ? FaVolumeMute : FaVolumeHigh} size={32} />
-        <Slider
-          className={styles["track-controls--volume__track"]}
-          color={"blue"}
-          value={volume}
-          minValue={0}
-          maxValue={2}
-          step={0.01}
-          onChangeEnd={onVolumeChangeEnd}
-          onChange={onVolumeChange}
-        >
-          <Slider.Track />
-        </Slider>
-      </div>
+      <VolumeSlider>
+        <VolumeSlider.Icon />
+        <VolumeSlider.Slider />
+      </VolumeSlider>
       <Button
         onPress={onShufflePress}
         className={styles["track-controls--shuffle"]}
