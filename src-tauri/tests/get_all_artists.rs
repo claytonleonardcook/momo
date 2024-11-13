@@ -2,7 +2,6 @@ use include_sqlite_sql::{impl_sql, include_sql};
 use momo::{artist::get_all_artists, GlobalState};
 use std::sync::Mutex;
 use tauri::Manager;
-use tauri::State;
 
 mod common;
 
@@ -17,15 +16,13 @@ fn can_get_all_artists() {
     tauri::test::mock_builder()
         .manage(Mutex::new(GlobalState::default()))
         .setup(|app| {
-            let state: State<Mutex<GlobalState>> = app.state();
+            common::create_tables(app.state()).unwrap();
 
-            common::create_tables(&state).unwrap();
+            common::create_artist("Alex G", app.state()).unwrap();
+            common::create_artist("Lizzy McAlpine", app.state()).unwrap();
+            common::create_artist("The Daughters of Eve", app.state()).unwrap();
 
-            common::create_artist("Alex G", &state).unwrap();
-            common::create_artist("Lizzy McAlpine", &state).unwrap();
-            common::create_artist("The Daughters of Eve", &state).unwrap();
-
-            let artists = get_all_artists(&state).unwrap();
+            let artists = get_all_artists(app.state()).unwrap();
 
             assert_eq!(artists.get(0).unwrap().name, "Alex G");
 

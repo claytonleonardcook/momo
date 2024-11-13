@@ -59,7 +59,7 @@ pub fn get_all_tracks(global_state: State<Mutex<GlobalState>>) -> Result<Vec<Tra
 #[tauri::command]
 pub fn get_tracks_by_artist(
     artist_name: &str,
-    global_state: &State<Mutex<GlobalState>>,
+    global_state: State<Mutex<GlobalState>>,
 ) -> Result<Vec<Track>, String> {
     let state = global_state.lock().unwrap();
 
@@ -86,7 +86,7 @@ pub fn get_tracks_by_artist(
 #[tauri::command]
 pub fn get_tracks_by_album(
     album_id: i64,
-    global_state: &State<Mutex<GlobalState>>,
+    global_state: State<Mutex<GlobalState>>,
 ) -> Result<Vec<Track>, String> {
     let state = global_state.lock().unwrap();
 
@@ -123,7 +123,7 @@ pub struct TrackInformationResponse {
 #[tauri::command]
 pub fn get_track_information(
     track_id: i64,
-    global_state: &State<Mutex<GlobalState>>,
+    global_state: State<Mutex<GlobalState>>,
 ) -> Result<TrackInformationResponse, String> {
     let state = global_state.lock().unwrap();
 

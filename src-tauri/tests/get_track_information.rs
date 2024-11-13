@@ -6,7 +6,6 @@ use momo::{
 };
 use std::{path::Path, sync::Mutex};
 use tauri::Manager;
-use tauri::State;
 
 mod common;
 
@@ -21,21 +20,19 @@ fn can_get_track_information() {
     tauri::test::mock_builder()
         .manage(Mutex::new(GlobalState::default()))
         .setup(|app| {
-            let state: State<Mutex<GlobalState>> = app.state();
-
-            common::create_tables(&state).unwrap();
+            common::create_tables(app.state()).unwrap();
 
             {
                 let mut paths = Vec::new();
 
                 collect_mp3_files(Path::new("../public"), &mut paths);
 
-                insert_tracks_into_database(&state, paths);
+                insert_tracks_into_database(app.state(), paths);
             }
 
-            common::print_all_tracks_by_artist("Cat", &state).unwrap();
+            common::print_all_tracks_by_artist("Cat", app.state()).unwrap();
 
-            let track_information = get_track_information(1, &state).unwrap();
+            let track_information = get_track_information(1, app.state()).unwrap();
 
             assert_eq!(track_information.track_title, "Paw");
             assert_eq!(track_information.album_title, "Purr");

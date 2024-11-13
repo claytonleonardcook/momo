@@ -3,13 +3,13 @@
 
 use include_sqlite_sql::{impl_sql, include_sql};
 use momo::{
-    track,
+    album, artist, playlist, track,
     utilities::{collect_mp3_files, insert_tracks_into_database},
     GlobalState,
 };
-use rodio::{source::SineWave, OutputStream, Sink, Source};
+use rodio::{Decoder, OutputStream, Sink};
 use rusqlite::Result;
-use std::{path::Path, sync::Mutex, time::Duration};
+use std::{fs::File, io::BufReader, path::Path, sync::Mutex};
 use tauri::{Manager, State};
 
 include_sql!("sql/Tracks.sql");
@@ -48,6 +48,16 @@ fn set_volume(volume: f32, global_state: State<Mutex<GlobalState>>) -> Result<()
     Ok(())
 }
 
+#[tauri::command]
+fn get_track_position(global_state: State<Mutex<GlobalState>>) -> Result<u64, String> {
+    let state = global_state.lock().unwrap();
+
+    let sink = state.sink.as_ref().unwrap();
+    let track_position = sink.get_pos().as_secs();
+
+    Ok(track_position)
+}
+
 fn main() -> Result<()> {
     let (_stream, stream_handle) = OutputStream::try_default().unwrap();
     let sink = Sink::try_new(&stream_handle).unwrap();
@@ -55,9 +65,8 @@ fn main() -> Result<()> {
     tauri::Builder::default()
         .manage(Mutex::new(GlobalState::new(sink)))
         .setup(|app| {
-            let global_state: State<Mutex<GlobalState>> = app.state();
-
             {
+                let global_state = app.state::<Mutex<GlobalState>>();
                 let state = global_state.lock().unwrap();
                 let connection = state.connection.lock().unwrap();
 
@@ -71,10 +80,11 @@ fn main() -> Result<()> {
                 let mut paths = Vec::new();
 
                 collect_mp3_files(Path::new("../public"), &mut paths);
-                insert_tracks_into_database(&global_state, paths);
+                insert_tracks_into_database(app.state(), paths);
             }
 
             {
+                let global_state = app.state::<Mutex<GlobalState>>();
                 let state = global_state.lock().unwrap();
                 let connection = state.connection.lock().unwrap();
 
@@ -102,11 +112,11 @@ fn main() -> Result<()> {
             }
 
             {
+                let global_state = app.state::<Mutex<GlobalState>>();
                 let state = global_state.lock().unwrap();
 
-                let source = SineWave::new(440.0)
-                    .take_duration(Duration::from_secs(30))
-                    .amplify(0.20);
+                let file = BufReader::new(File::open("/home/clay/Music/Pinegrove - Everything So Far/Pinegrove - Everything So Far - 07 Need 2.mp3").unwrap());
+                let source = Decoder::new(file).unwrap();
 
                 let sink = state.sink.as_ref().unwrap();
 
@@ -120,7 +130,17 @@ fn main() -> Result<()> {
             pause,
             play,
             set_volume,
-            track::get_all_tracks
+            get_track_position,
+            track::get_all_tracks,
+            track::get_tracks_by_artist,
+            track::get_tracks_by_album,
+            track::get_track_information,
+            album::get_all_albums,
+            album::get_albums_by_artist,
+            artist::get_all_artists,
+            playlist::get_all_playlists,
+            playlist::add_track_to_playlist,
+            playlist::get_tracks_in_playlist
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -1,11 +1,12 @@
 use crate::GlobalState;
 use include_sqlite_sql::{impl_sql, include_sql};
+use serde::Serialize;
 use std::sync::Mutex;
 use tauri::State;
 
 include_sql!("sql/Artists.sql");
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct Artist {
     pub name: String,
 }
@@ -23,7 +24,7 @@ impl std::clone::Clone for Artist {
 }
 
 #[tauri::command]
-pub fn get_all_artists(global_state: &State<Mutex<GlobalState>>) -> Result<Vec<Artist>, String> {
+pub fn get_all_artists(global_state: State<Mutex<GlobalState>>) -> Result<Vec<Artist>, String> {
     let state = global_state.lock().unwrap();
 
     let connnection = state.connection.lock().unwrap();

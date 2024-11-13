@@ -2,7 +2,6 @@ use include_sqlite_sql::{impl_sql, include_sql};
 use momo::{playlist::create_playlist, playlist::get_all_playlists, GlobalState};
 use std::sync::Mutex;
 use tauri::Manager;
-use tauri::State;
 
 mod common;
 
@@ -17,15 +16,13 @@ fn can_create_playlist() {
     tauri::test::mock_builder()
         .manage(Mutex::new(GlobalState::default()))
         .setup(|app| {
-            let state: State<Mutex<GlobalState>> = app.state();
+            common::create_tables(app.state()).unwrap();
 
-            common::create_tables(&state).unwrap();
+            create_playlist("Playlist #1", app.state()).unwrap();
+            create_playlist("Playlist #2", app.state()).unwrap();
+            create_playlist("Playlist #3", app.state()).unwrap();
 
-            create_playlist("Playlist #1", &state).unwrap();
-            create_playlist("Playlist #2", &state).unwrap();
-            create_playlist("Playlist #3", &state).unwrap();
-
-            let playlists = get_all_playlists(&state).unwrap();
+            let playlists = get_all_playlists(app.state()).unwrap();
 
             assert_eq!(playlists.get(0).unwrap().id, 1);
             assert_eq!(playlists.get(0).unwrap().name, "Playlist #1");

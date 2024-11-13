@@ -32,7 +32,7 @@ pub fn collect_mp3_files(dir: &Path, mp3_files: &mut Vec<PathBuf>) {
     }
 }
 
-pub fn insert_tracks_into_database(global_state: &State<Mutex<GlobalState>>, paths: Vec<PathBuf>) {
+pub fn insert_tracks_into_database(global_state: State<Mutex<GlobalState>>, paths: Vec<PathBuf>) {
     let state = global_state.lock().unwrap();
 
     for path in paths {

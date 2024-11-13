@@ -10,7 +10,7 @@ include_sql!("sql/Artists.sql");
 include_sql!("sql/Playlists.sql");
 include_sql!("sql/PlaylistTracks.sql");
 
-pub fn create_tables(global_state: &State<Mutex<GlobalState>>) -> Result<(), ()> {
+pub fn create_tables(global_state: State<Mutex<GlobalState>>) -> Result<(), ()> {
     let state = global_state.lock().unwrap();
     let connection = state.connection.lock().unwrap();
 
@@ -25,7 +25,7 @@ pub fn create_tables(global_state: &State<Mutex<GlobalState>>) -> Result<(), ()>
 
 // TODO: fix dead code warning
 #[allow(dead_code)]
-pub fn create_artist(name: &str, global_state: &State<Mutex<GlobalState>>) -> Result<String, ()> {
+pub fn create_artist(name: &str, global_state: State<Mutex<GlobalState>>) -> Result<String, ()> {
     let state = global_state.lock().unwrap();
     let connection = state.connection.lock().unwrap();
 
@@ -38,7 +38,7 @@ pub fn create_artist(name: &str, global_state: &State<Mutex<GlobalState>>) -> Re
 #[allow(dead_code)]
 pub fn print_all_tracks_by_artist(
     artist_name: &str,
-    global_state: &State<Mutex<GlobalState>>,
+    global_state: State<Mutex<GlobalState>>,
 ) -> Result<(), ()> {
     let state = global_state.lock().unwrap();
     let connection = state.connection.lock().unwrap();
@@ -73,7 +73,7 @@ pub fn print_all_tracks_by_artist(
 pub fn create_album(
     name: &str,
     artist_name: &str,
-    global_state: &State<Mutex<GlobalState>>,
+    global_state: State<Mutex<GlobalState>>,
 ) -> Result<i64, ()> {
     let state = global_state.lock().unwrap();
     let connection = state.connection.lock().unwrap();
@@ -89,7 +89,7 @@ pub fn create_track(
     name: &str,
     path: &str,
     album_id: i64,
-    global_state: &State<Mutex<GlobalState>>,
+    global_state: State<Mutex<GlobalState>>,
 ) -> Result<i64, ()> {
     let state = global_state.lock().unwrap();
     let connection = state.connection.lock().unwrap();
@@ -103,7 +103,7 @@ pub fn create_track(
 
 // TODO: fix dead code warning
 #[allow(dead_code)]
-pub fn create_playlist(name: &str, global_state: &State<Mutex<GlobalState>>) -> Result<i64, ()> {
+pub fn create_playlist(name: &str, global_state: State<Mutex<GlobalState>>) -> Result<i64, ()> {
     let state = global_state.lock().unwrap();
     let connection = state.connection.lock().unwrap();
 
