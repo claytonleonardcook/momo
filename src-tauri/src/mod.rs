@@ -1,6 +1,5 @@
-use std::sync::Mutex;
-
 use rusqlite::Connection;
+use std::sync::Mutex;
 
 pub struct GlobalState {
     pub connection: std::sync::Mutex<rusqlite::Connection>,
