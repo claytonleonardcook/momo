@@ -1,5 +1,7 @@
 use crate::GlobalState;
 use include_sqlite_sql::{impl_sql, include_sql};
+use std::sync::Mutex;
+use tauri::State;
 
 include_sql!("sql/Albums.sql");
 
@@ -27,7 +29,9 @@ impl std::clone::Clone for Album {
 }
 
 #[tauri::command]
-pub fn get_all_albums(state: &GlobalState) -> Result<Vec<Album>, String> {
+pub fn get_all_albums(global_state: &State<Mutex<GlobalState>>) -> Result<Vec<Album>, String> {
+    let state = global_state.lock().unwrap();
+
     let connnection = state.connection.lock().unwrap();
 
     let albums = &mut Vec::new();
@@ -48,7 +52,12 @@ pub fn get_all_albums(state: &GlobalState) -> Result<Vec<Album>, String> {
 }
 
 #[tauri::command]
-pub fn get_albums_by_artist(artist_name: &str, state: &GlobalState) -> Result<Vec<Album>, String> {
+pub fn get_albums_by_artist(
+    artist_name: &str,
+    global_state: &State<Mutex<GlobalState>>,
+) -> Result<Vec<Album>, String> {
+    let state = global_state.lock().unwrap();
+
     let connnection = state.connection.lock().unwrap();
 
     let albums = &mut Vec::new();

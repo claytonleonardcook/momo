@@ -1,10 +1,13 @@
 use crate::GlobalState;
 use audiotags::Tag;
 use include_sqlite_sql::{impl_sql, include_sql};
+use serde::Serialize;
+use std::sync::Mutex;
+use tauri::State;
 
 include_sql!("sql/Tracks.sql");
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct Track {
     pub id: i64,
     pub name: String,
@@ -30,7 +33,9 @@ impl std::clone::Clone for Track {
 }
 
 #[tauri::command]
-pub fn get_all_tracks(state: &GlobalState) -> Result<Vec<Track>, String> {
+pub fn get_all_tracks(global_state: State<Mutex<GlobalState>>) -> Result<Vec<Track>, String> {
+    let state = global_state.lock().unwrap();
+
     let connnection = state.connection.lock().unwrap();
 
     let tracks = &mut Vec::new();
@@ -52,7 +57,12 @@ pub fn get_all_tracks(state: &GlobalState) -> Result<Vec<Track>, String> {
 }
 
 #[tauri::command]
-pub fn get_tracks_by_artist(artist_name: &str, state: &GlobalState) -> Result<Vec<Track>, String> {
+pub fn get_tracks_by_artist(
+    artist_name: &str,
+    global_state: &State<Mutex<GlobalState>>,
+) -> Result<Vec<Track>, String> {
+    let state = global_state.lock().unwrap();
+
     let connnection = state.connection.lock().unwrap();
 
     let tracks = &mut Vec::new();
@@ -74,7 +84,12 @@ pub fn get_tracks_by_artist(artist_name: &str, state: &GlobalState) -> Result<Ve
 }
 
 #[tauri::command]
-pub fn get_tracks_by_album(album_id: i64, state: &GlobalState) -> Result<Vec<Track>, String> {
+pub fn get_tracks_by_album(
+    album_id: i64,
+    global_state: &State<Mutex<GlobalState>>,
+) -> Result<Vec<Track>, String> {
+    let state = global_state.lock().unwrap();
+
     let connnection = state.connection.lock().unwrap();
 
     let tracks = &mut Vec::new();
@@ -108,8 +123,10 @@ pub struct TrackInformationResponse {
 #[tauri::command]
 pub fn get_track_information(
     track_id: i64,
-    state: &GlobalState,
+    global_state: &State<Mutex<GlobalState>>,
 ) -> Result<TrackInformationResponse, String> {
+    let state = global_state.lock().unwrap();
+
     let connnection = state
         .connection
         .lock()
