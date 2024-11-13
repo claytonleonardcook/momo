@@ -1,5 +1,5 @@
 import styles from "./style.module.scss";
-import TrackControls from "@/components/molecules/TrackControls";
+import TrackControls from "@/components/organisms/TrackControls";
 
 function Dashboard() {
   return (
