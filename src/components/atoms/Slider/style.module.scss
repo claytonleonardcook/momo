@@ -4,8 +4,8 @@
 
   display: flex;
   gap: 16px;
-  max-width: 300px;
   min-height: 16px;
+  width: 100%;
 
   &__track {
     position: relative;
@@ -47,6 +47,5 @@
 
   &[data-orientation="horizontal"] {
     flex-direction: row;
-    width: 300px;
   }
 }
