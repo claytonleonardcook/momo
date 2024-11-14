@@ -5,14 +5,12 @@ import { Track } from "@/types/schema";
 import Card from "@/components/atoms/Card";
 import Button from "@/components/atoms/Button";
 import { open } from "@tauri-apps/plugin-dialog";
-import { AudioPlayerContext } from "@/contexts";
 
 namespace MediaGrid {
   export type Props = HTMLAttributes<HTMLDivElement>;
 }
 
 const MediaGrid = ({ className, style, ...props }: MediaGrid.Props) => {
-  const audioPlayerContext = useContext(AudioPlayerContext);
   const [tracks, setTracks] = useState<Track[]>([]);
 
   useEffect(() => {
