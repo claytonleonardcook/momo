@@ -1,0 +1,11 @@
+.track-timeline {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 16px;
+
+  &__track {
+    height: 16px;
+    padding: 0 32px;
+  }
+}
