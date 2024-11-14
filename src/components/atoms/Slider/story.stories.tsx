@@ -28,7 +28,13 @@ export const Default: Story = {
   },
   render: (args) => {
     return (
-      <Slider defaultValue={50} {...args}>
+      <Slider
+        style={{
+          width: "300px",
+        }}
+        defaultValue={50}
+        {...args}
+      >
         <Slider.Track />
       </Slider>
     );
@@ -46,6 +52,7 @@ export const Rainbow: Story = {
           display: "flex",
           flexDirection: "column",
           gap: "8px",
+          width: "300px",
         }}
       >
         <Slider defaultValue={15} color={"red"}>
@@ -80,7 +87,13 @@ export const Volume: Story = {
   },
   render: (args) => {
     return (
-      <Slider defaultValue={50} {...args}>
+      <Slider
+        style={{
+          width: "300px",
+        }}
+        defaultValue={50}
+        {...args}
+      >
         <Icon icon={FaVolumeHigh} />
         <Slider.Track />
       </Slider>
