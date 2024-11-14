@@ -1,10 +1,13 @@
 use crate::{track::Track, GlobalState};
 use include_sqlite_sql::{impl_sql, include_sql};
+use serde::Serialize;
+use std::sync::Mutex;
+use tauri::State;
 
 include_sql!("sql/Playlists.sql");
 include_sql!("sql/PlaylistTracks.sql");
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct Playlist {
     pub id: i64,
     pub name: String,
@@ -23,7 +26,9 @@ impl std::clone::Clone for Playlist {
 }
 
 #[tauri::command]
-pub fn get_all_playlists(state: &GlobalState) -> Result<Vec<Playlist>, String> {
+pub fn get_all_playlists(global_state: State<Mutex<GlobalState>>) -> Result<Vec<Playlist>, String> {
+    let state = global_state.lock().unwrap();
+
     let connnection = state.connection.lock().unwrap();
 
     let playlists = &mut Vec::new();
@@ -43,7 +48,9 @@ pub fn get_all_playlists(state: &GlobalState) -> Result<Vec<Playlist>, String> {
 }
 
 #[tauri::command]
-pub fn create_playlist(name: &str, state: &GlobalState) -> Result<i64, String> {
+pub fn create_playlist(name: &str, global_state: State<Mutex<GlobalState>>) -> Result<i64, String> {
+    let state = global_state.lock().unwrap();
+
     let connnection = state.connection.lock().unwrap();
 
     let playlist_id = connnection
@@ -57,8 +64,10 @@ pub fn create_playlist(name: &str, state: &GlobalState) -> Result<i64, String> {
 pub fn add_track_to_playlist(
     playlist_id: i64,
     track_id: i64,
-    state: &GlobalState,
+    global_state: State<Mutex<GlobalState>>,
 ) -> Result<(), String> {
+    let state = global_state.lock().unwrap();
+
     let connnection = state.connection.lock().unwrap();
 
     connnection
@@ -69,7 +78,12 @@ pub fn add_track_to_playlist(
 }
 
 #[tauri::command]
-pub fn get_tracks_in_playlist(playlist_id: i64, state: &GlobalState) -> Result<Vec<Track>, String> {
+pub fn get_tracks_in_playlist(
+    playlist_id: i64,
+    global_state: State<Mutex<GlobalState>>,
+) -> Result<Vec<Track>, String> {
+    let state = global_state.lock().unwrap();
+
     let connnection = state.connection.lock().unwrap();
 
     let tracks = &mut Vec::new();
