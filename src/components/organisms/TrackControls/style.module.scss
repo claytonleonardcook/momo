@@ -1,0 +1,26 @@
+.track-controls {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 16px;
+
+  &--controls {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+  }
+
+  &--time {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex: 4;
+    font-size: 16px;
+
+    &__track {
+      height: 16px;
+      padding: 0 32px;
+    }
+  }
+}
