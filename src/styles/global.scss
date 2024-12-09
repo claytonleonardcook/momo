@@ -56,6 +56,7 @@ body[data-theme="light"] {
   @include lighten-and-darken("mantle", $light-mantle);
   --crust: #{$light-crust};
   @include lighten-and-darken("crust", $light-crust);
+  --backdrop: #{rgba($light-crust, 0.5)};
 }
 
 body[data-theme="dark"] {
@@ -111,6 +112,7 @@ body[data-theme="dark"] {
   @include lighten-and-darken("mantle", $dark-mantle);
   --crust: #{$dark-crust};
   @include lighten-and-darken("crust", $dark-crust);
+  --backdrop: #{rgba($dark-crust, 0.5)};
 }
 
 body {

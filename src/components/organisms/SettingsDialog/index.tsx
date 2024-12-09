@@ -3,7 +3,6 @@ import styles from "./style.module.scss";
 import Button from "@/components/atoms/Button";
 import Icon from "@/components/atoms/Icon";
 import { FaCheck, FaPlus } from "react-icons/fa";
-import { FaCircleXmark } from "react-icons/fa6";
 import useMusicFolderPaths from "@/hooks/useMusicFolderPaths";
 import { open as openDialog } from "@tauri-apps/plugin-dialog";
 import useSettingsDialog from "@/hooks/useSettingsDialog";
@@ -33,38 +32,38 @@ const SettingsDialog = ({ className, ...props }: SettingsDialog.Props) => {
     settingsDialogRef.current?.close();
   }
 
-  function onCancel() {
-    settingsDialogRef.current?.close();
-  }
-
   return (
     <dialog
       className={`${styles["settings-dialog"]} ${className ?? ""}`}
       ref={settingsDialogRef}
+      aria-labelledby={"dialog-title"}
       {...props}
     >
-      <section>
-        <h2>Music Folders:</h2>
-        <ul>
-          {paths.map((path, index) => (
-            <li key={index}>{path}</li>
-          ))}
-        </ul>
-        <Button onPress={onAddFolder}>
-          <Icon icon={FaPlus} />
-          Add New Folder
-        </Button>
-      </section>
-      <div className={styles["settings-dialog__buttons"]}>
-        <Button onPress={onApply}>
-          <Icon icon={FaCheck} />
-          Apply
-        </Button>
-
-        <Button onPress={onCancel}>
-          <Icon icon={FaCircleXmark} />
-          Cancel
-        </Button>
+      <div>
+        <header>
+          <h2 id="dialog-title">Settings</h2>
+        </header>
+        <main>
+          <section className={styles["settings-dialog__music-folders"]}>
+            <h3>Music Folders:</h3>
+            <ul>
+              {paths.map((path, index) => (
+                <li key={index}>{path}</li>
+              ))}
+            </ul>
+            <Button onPress={onAddFolder}>
+              <Icon icon={FaPlus} />
+              Add New Folder
+            </Button>
+          </section>
+          <Button
+            onPress={onApply}
+            className={styles["settings-dialog__apply"]}
+          >
+            <Icon icon={FaCheck} />
+            Apply
+          </Button>
+        </main>
       </div>
     </dialog>
   );

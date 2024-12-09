@@ -1,6 +1,4 @@
 .settings-dialog {
-  //   display: flex;
-  //   flex-direction: column;
   border: none;
   padding: 16px;
   border-radius: 8px;
@@ -9,14 +7,28 @@
   background-color: var(--surface0);
   color: var(--text);
 
-  > section {
-    flex: 1;
+  > div {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    > main {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
   }
 
-  &__buttons {
-    display: flex;
-    flex-shrink: 1;
-    justify-content: flex-end;
-    gap: 8px;
+  &__music-folders {
+    flex-grow: 1;
+  }
+
+  &__apply {
+    width: fit-content;
+    align-self: flex-end;
+  }
+
+  &::backdrop {
+    background-color: var(--backdrop);
   }
 }
