@@ -14,18 +14,23 @@ include_sql!("sql/Artists.sql");
 include_sql!("sql/Playlists.sql");
 include_sql!("sql/PlaylistTracks.sql");
 
-pub fn collect_mp3_files(dir: &Path, mp3_files: &mut Vec<PathBuf>) {
-    if let Ok(entries) = std::fs::read_dir(dir) {
-        for entry in entries {
-            if let Ok(entry) = entry {
-                let path = entry.path();
-                if path.is_dir() {
-                    // If the entry is a directory, call the function recursively
-                    collect_mp3_files(&path, mp3_files);
-                } else if let Some(ext) = path.extension() {
-                    if ext == "mp3" {
-                        // If the entry is a .mp3 file, add it to the vector
-                        mp3_files.push(path);
+pub fn collect_mp3_files(paths: Vec<String>, mp3_files: &mut Vec<PathBuf>) {
+    for path_str in paths {
+        let path = PathBuf::from(path_str);
+
+        if let Ok(entries) = std::fs::read_dir(&path) {
+            for entry in entries {
+                if let Ok(entry) = entry {
+                    let entry_path = entry.path();
+                    if entry_path.is_dir() {
+                        collect_mp3_files(
+                            vec![entry_path.to_string_lossy().to_string()],
+                            mp3_files,
+                        );
+                    } else if let Some(ext) = entry_path.extension() {
+                        if ext == "mp3" {
+                            mp3_files.push(entry_path);
+                        }
                     }
                 }
             }
