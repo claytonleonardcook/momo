@@ -91,7 +91,7 @@ const TrackControls = ({
         </Slider>
         <span>3:46</span>
       </div>
-      <VolumeSlider>
+      <VolumeSlider className={styles["track-controls--volume"]}>
         <VolumeSlider.Icon />
         <VolumeSlider.Slider />
       </VolumeSlider>

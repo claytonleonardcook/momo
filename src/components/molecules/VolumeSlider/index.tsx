@@ -16,7 +16,7 @@ const VolumeContext = createContext<
 >([0, () => {}, () => {}]);
 
 const VolumeSlider = ({
-  className,
+  className = "",
   children,
   ...props
 }: VolumeSlider.Props) => {
@@ -38,7 +38,7 @@ const VolumeSlider = ({
 
   return (
     <VolumeContext.Provider value={[volume, onVolumeChange, onVolumeChangeEnd]}>
-      <div className={styles["volume-slider"]} {...props}>
+      <div className={`${styles["volume-slider"]} ${className}`} {...props}>
         {children}
       </div>
     </VolumeContext.Provider>
