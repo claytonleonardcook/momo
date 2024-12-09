@@ -4,7 +4,7 @@ use momo_lib::{
     utilities::{collect_mp3_files, insert_tracks_into_database},
     GlobalState,
 };
-use std::{path::Path, sync::Mutex};
+use std::sync::Mutex;
 use tauri::Manager;
 
 mod common;

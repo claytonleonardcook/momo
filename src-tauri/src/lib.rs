@@ -4,7 +4,6 @@ use queues::Queue;
 use rodio::{OutputStream, Sink};
 use rusqlite::Connection;
 use rusqlite::Result;
-use std::path::Path;
 use std::sync::Mutex;
 use tauri::{Manager, State};
 

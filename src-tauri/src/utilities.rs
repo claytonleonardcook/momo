@@ -1,11 +1,7 @@
 use crate::GlobalState;
 use audiotags::Tag;
 use include_sqlite_sql::{impl_sql, include_sql};
-use std::{
-    fs::canonicalize,
-    path::{Path, PathBuf},
-    sync::Mutex,
-};
+use std::{fs::canonicalize, path::PathBuf, sync::Mutex};
 use tauri::State;
 
 include_sql!("sql/Tracks.sql");
