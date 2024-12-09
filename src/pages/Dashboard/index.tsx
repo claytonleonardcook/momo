@@ -9,7 +9,7 @@ function Dashboard() {
   return (
     <main className={styles["dashboard"]}>
       <TrackControls trackDuration={50} />
-      <MediaGrid />
+      <MediaGrid className={styles["dashboard__media-grid"]} />
     </main>
   );
 }
