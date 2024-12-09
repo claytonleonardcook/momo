@@ -12,9 +12,9 @@
   "app": {
     "windows": [
       {
-        "title": "momo",
-        "width": 800,
-        "height": 600
+        "title": "Momo",
+        "width": 1200,
+        "height": 800
       }
     ],
     "security": {
