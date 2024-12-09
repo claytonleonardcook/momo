@@ -3,18 +3,11 @@ import styles from "./style.module.scss";
 import Button from "@/components/atoms/Button";
 import Slider from "@/components/atoms/Slider";
 import Icon from "@/components/atoms/Icon";
-import {
-  FaBackward,
-  FaBars,
-  FaForward,
-  FaPause,
-  FaPlay,
-  FaVolumeMute,
-} from "react-icons/fa";
-import { FaRepeat, FaShuffle, FaVolumeHigh } from "react-icons/fa6";
-import { PressEvent } from "react-aria-components";
+import { FaBackward, FaBars, FaForward, FaPause, FaPlay } from "react-icons/fa";
+import { FaRepeat, FaShuffle } from "react-icons/fa6";
 import { invoke } from "@tauri-apps/api/core";
 import VolumeSlider from "@/components/molecules/VolumeSlider";
+import useSettingsDialog from "@/hooks/useSettingsDialog";
 
 type TrackControlsProps = HTMLAttributes<HTMLDivElement> & {
   trackDuration: number;
@@ -26,28 +19,14 @@ const TrackControls = ({
   style,
   ...props
 }: TrackControlsProps) => {
+  const settingsDialogRef = useSettingsDialog();
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [volume, setVolume] = useState<number>(1);
 
-  function onVolumeChange(value: number | number[]) {
-    if (typeof value === "number") {
-      setVolume(value);
-    }
-  }
-
-  function onVolumeChangeEnd(value: number | number[]) {
-    if (typeof value === "number") {
-      invoke("set_volume", {
-        volume,
-      }).catch(console.error);
-    }
-  }
-
-  function onBackwardPress(event: PressEvent) {
+  function onBackwardPress() {
     console.log("Backward press");
   }
 
-  function onPlayPausePress(event: PressEvent) {
+  function onPlayPausePress() {
     if (isPlaying) {
       invoke("pause").catch(console.error);
     } else {
@@ -57,20 +36,20 @@ const TrackControls = ({
     setIsPlaying((state) => !state);
   }
 
-  function onForwardPress(event: PressEvent) {
+  function onForwardPress() {
     console.log("Forward press");
   }
 
-  function onShufflePress(event: PressEvent) {
+  function onShufflePress() {
     console.log("Shuffle press");
   }
 
-  function onLoopPress(event: PressEvent) {
+  function onLoopPress() {
     console.log("Loop press");
   }
 
-  function onMenuPress(event: PressEvent) {
-    console.log("Menu press");
+  function onMenuPress() {
+    settingsDialogRef.current?.showModal();
   }
 
   return (
