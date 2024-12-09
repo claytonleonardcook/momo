@@ -25,7 +25,7 @@ fn can_get_track_information() {
             {
                 let mut paths = Vec::new();
 
-                collect_mp3_files(Path::new("../public"), &mut paths);
+                collect_mp3_files(vec!["../public".to_string()], &mut paths);
 
                 insert_tracks_into_database(app.state(), paths);
             }
