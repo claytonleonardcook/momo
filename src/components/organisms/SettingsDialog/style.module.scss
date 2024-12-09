@@ -1,0 +1,22 @@
+.settings-dialog {
+  //   display: flex;
+  //   flex-direction: column;
+  border: none;
+  padding: 16px;
+  border-radius: 8px;
+  width: 80%;
+  height: 80%;
+  background-color: var(--surface0);
+  color: var(--text);
+
+  > section {
+    flex: 1;
+  }
+
+  &__buttons {
+    display: flex;
+    flex-shrink: 1;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+}
