@@ -8,7 +8,8 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "tauri": "tauri",
-    "storybook": "storybook dev --debug --no-open -p 6006"
+    "storybook": "storybook dev --debug --no-open -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@tauri-apps/api": "^2",
