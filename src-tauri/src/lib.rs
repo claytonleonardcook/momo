@@ -24,6 +24,7 @@ pub struct GlobalState {
     pub connection: std::sync::Mutex<rusqlite::Connection>,
     pub sink: Option<rodio::Sink>,
     pub queue: Queue<String>,
+    pub music_folder_paths: Vec<String>,
 }
 
 impl GlobalState {
@@ -32,7 +33,12 @@ impl GlobalState {
             connection: Mutex::new(Connection::open_in_memory().unwrap()),
             sink: Some(sink),
             queue: Queue::new(),
+            music_folder_paths: Vec::new(),
         }
+    }
+
+    pub fn add_music_folder_path(&mut self, path: &str) {
+        self.music_folder_paths.push(path.to_string());
     }
 }
 
@@ -42,8 +48,28 @@ impl Default for GlobalState {
             connection: Mutex::new(Connection::open_in_memory().unwrap()),
             sink: Option::None,
             queue: Queue::new(),
+            music_folder_paths: Vec::new(),
         }
     }
+}
+
+#[tauri::command]
+fn get_music_folder_paths(global_state: State<Mutex<GlobalState>>) -> Result<Vec<String>, String> {
+    let state = global_state.lock().unwrap();
+
+    Ok(state.music_folder_paths.clone())
+}
+
+#[tauri::command]
+fn add_music_folder_path(
+    path: &str,
+    global_state: State<Mutex<GlobalState>>,
+) -> Result<Vec<String>, String> {
+    let mut state = global_state.lock().unwrap();
+
+    state.add_music_folder_path(path);
+
+    Ok(state.music_folder_paths.clone())
 }
 
 #[tauri::command]
@@ -65,12 +91,27 @@ pub fn run() {
     let sink = Sink::try_new(&stream_handle).unwrap();
 
     tauri::Builder::default()
+        .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_shell::init())
         .manage(Mutex::new(GlobalState::new(sink)))
         .setup(|app| {
             {
                 let global_state = app.state::<Mutex<GlobalState>>();
+                let mut state = global_state.lock().unwrap();
+
+                match app.path().audio_dir() {
+                    Ok(path) => {
+                        if let Some(path_str) = path.to_str() {
+                            state.add_music_folder_path(path_str);
+                        }
+                    }
+                    Err(_) => eprint!("Couldn't get main music directory!"),
+                }
+            }
+            {
+                let global_state = app.state::<Mutex<GlobalState>>();
                 let state = global_state.lock().unwrap();
+
                 let connection = state.connection.lock().unwrap();
 
                 connection.create_artists_table().unwrap();
@@ -130,6 +171,8 @@ pub fn run() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
+            get_music_folder_paths,
+            add_music_folder_path,
             set_library_directory,
             track::get_all_tracks,
             track::get_tracks_by_artist,
