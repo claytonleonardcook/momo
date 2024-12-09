@@ -1,2 +1,14 @@
 .media-grid {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  padding-bottom: 32px;
+
+  > button {
+    flex: 0 0 calc(20% - 16px);
+  }
 }

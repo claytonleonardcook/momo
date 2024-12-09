@@ -1,10 +1,8 @@
-import { HTMLAttributes, useContext, useEffect, useState } from "react";
+import { HTMLAttributes, useEffect, useState } from "react";
 import styles from "./style.module.scss";
 import { invoke } from "@tauri-apps/api/core";
 import { Track } from "@/types/schema";
 import Card from "@/components/atoms/Card";
-import Button from "@/components/atoms/Button";
-import { open } from "@tauri-apps/plugin-dialog";
 
 namespace MediaGrid {
   export type Props = HTMLAttributes<HTMLDivElement>;
@@ -19,21 +17,6 @@ const MediaGrid = ({ className, style, ...props }: MediaGrid.Props) => {
       .catch(console.error);
   }, []);
 
-  async function onSelectMusicFolderPress() {
-    const directory = await open({
-      multiple: false,
-      directory: true,
-    });
-
-    await invoke("set_library_directory", {
-      directory,
-    });
-
-    const tracks = (await invoke("get_all_tracks")) as Track[];
-
-    setTracks(tracks);
-  }
-
   return (
     <section
       className={`${styles["media-grid"]} ${className ?? ""}`}
@@ -41,23 +24,16 @@ const MediaGrid = ({ className, style, ...props }: MediaGrid.Props) => {
     >
       {tracks.map((track) => {
         return (
-          <div>
-            <Card
-              title={track.name}
-              subtext={"hello"}
-              image={"./ninjatuna.jpg"}
-              onPress={async () => {
-                console.log("Play track");
-              }}
-            />
-          </div>
+          <Card
+            title={track.name}
+            subtext={"hello"}
+            image={"./ninjatuna.jpg"}
+            onPress={async () => {
+              console.log("Play track");
+            }}
+          />
         );
       })}
-      {tracks && (
-        <Button onPress={onSelectMusicFolderPress}>
-          Select a Music Folder
-        </Button>
-      )}
     </section>
   );
 };

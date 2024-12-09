@@ -6,27 +6,29 @@
   background: none;
   cursor: pointer;
   flex-grow: 1;
+  align-items: center;
 
   img {
     aspect-ratio: 1 / 1;
+    border-radius: 8px;
     object-fit: cover;
-  }
-
-  h2 {
-    font-size: medium;
-    margin: 0;
-  }
-
-  p {
-    font-size: x-small;
-    margin: 0;
+    width: 100%;
+    min-width: 200px;
   }
 
   h2,
   p {
+    font-size: medium;
     margin: 0;
     text-overflow: ellipsis;
     overflow: hidden;
-    white-space: nowrap;
+    white-space: break-spaces;
+    max-width: 100%;
+  }
+
+  h2,
+  p {
+    width: 100%;
+    box-sizing: border-box;
   }
 }
