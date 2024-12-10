@@ -1,6 +1,7 @@
 use crate::utilities::{collect_mp3_files, insert_tracks_into_database};
 use include_sqlite_sql::{impl_sql, include_sql};
 use queues::Queue;
+use rodio::Decoder;
 use rodio::{OutputStream, Sink};
 use rusqlite::Connection;
 use rusqlite::Result;
@@ -51,6 +52,32 @@ impl Default for GlobalState {
             music_folder_paths: Vec::new(),
         }
     }
+}
+
+#[tauri::command]
+fn play_track(track_id: i64, global_state: State<Mutex<GlobalState>>) -> Result<(), &str> {
+    let state = global_state.lock().unwrap();
+
+    if let Some(sink) = &state.sink {
+        sink.clear();
+
+        let connection = state.connection.lock().unwrap();
+
+        let path = connection
+            .get_track_path_by_id(track_id, |row| {
+                Ok(row.get_ref("path")?.as_str()?.to_string())
+            })
+            .unwrap();
+
+        let track = std::io::BufReader::new(std::fs::File::open(path).unwrap());
+        let source = Decoder::new(track).unwrap();
+        sink.append(source);
+        sink.play();
+    } else {
+        return Err("Couldn't play track!");
+    }
+
+    Ok(())
 }
 
 #[tauri::command]
@@ -185,6 +212,7 @@ pub fn run() {
             get_music_folder_paths,
             add_music_folder_path,
             scan_directories,
+            play_track,
             track::get_all_tracks,
             track::get_tracks_by_artist,
             track::get_tracks_by_album,
