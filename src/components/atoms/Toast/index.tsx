@@ -1,5 +1,5 @@
 import ToastContext from "@/contexts/ToastContext";
-import { useToast } from "@/hooks/useToast";
+import { useToast } from "@/hooks";
 import { TypeToast } from "@/types/toasts";
 import { CSSProperties, ReactNode, useCallback, useState } from "react";
 import style from "./style.module.scss";

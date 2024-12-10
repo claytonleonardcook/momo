@@ -9,7 +9,7 @@ export type Album = {
 };
 
 export type Track = {
-  id: string;
+  id: number;
   name: string;
   path: string;
   album_id: Album["id"];

@@ -2,7 +2,7 @@ import { Meta, StoryObj } from "@storybook/react";
 
 import Toast from ".";
 import Button from "../Button";
-import { useToast } from "@/hooks/useToast";
+import { useToast } from "@/hooks";
 
 const meta: Meta<typeof Toast> = {
   title: "Components/Atoms/Toast",

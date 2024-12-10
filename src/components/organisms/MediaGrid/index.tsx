@@ -1,9 +1,9 @@
 import { HTMLAttributes, useEffect, useState } from "react";
 import styles from "./style.module.scss";
 import { convertFileSrc, invoke } from "@tauri-apps/api/core";
-import { Track } from "@/types/schema";
 import Card from "@/components/atoms/Card";
 import { appCacheDir } from "@tauri-apps/api/path";
+import { useAllTracks } from "@/hooks";
 
 namespace MediaGrid {
   export type Props = HTMLAttributes<HTMLDivElement>;
@@ -11,15 +11,17 @@ namespace MediaGrid {
 
 const MediaGrid = ({ className, style, ...props }: MediaGrid.Props) => {
   const [cacheDirectory, setCacheDirectory] = useState<string>("");
-  const [tracks, setTracks] = useState<Track[]>([]);
+  const { tracks } = useAllTracks();
 
   useEffect(() => {
-    invoke("get_all_tracks")
-      .then((value) => setTracks(value as Track[]))
-      .catch(console.error);
-
     appCacheDir().then(setCacheDirectory).catch(console.error);
   }, []);
+
+  function onCardPress(trackId: number) {
+    invoke("play_track", {
+      trackId,
+    }).catch(console.error);
+  }
 
   return (
     <section
@@ -31,12 +33,12 @@ const MediaGrid = ({ className, style, ...props }: MediaGrid.Props) => {
           <Card
             key={track.id}
             title={track.name}
-            subtext={"hello"}
+            subtext={track.album_name}
             image={convertFileSrc(
               `${cacheDirectory}/covers/${track.album_name}.jpeg`
             )}
-            onPress={async () => {
-              console.log("Play track");
+            onPress={() => {
+              onCardPress(track.id);
             }}
           />
         );
