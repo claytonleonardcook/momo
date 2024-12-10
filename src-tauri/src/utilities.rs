@@ -1,8 +1,9 @@
 use crate::GlobalState;
-use audiotags::Tag;
+use audiotags::{Picture, Tag};
 use include_sqlite_sql::{impl_sql, include_sql};
+use std::io::Write;
 use std::{fs::canonicalize, path::PathBuf, sync::Mutex};
-use tauri::State;
+use tauri::{AppHandle, Manager, State};
 
 include_sql!("sql/Tracks.sql");
 include_sql!("sql/Albums.sql");
@@ -34,7 +35,11 @@ pub fn collect_mp3_files(paths: Vec<String>, mp3_files: &mut Vec<PathBuf>) {
     }
 }
 
-pub fn insert_tracks_into_database(global_state: State<Mutex<GlobalState>>, paths: Vec<PathBuf>) {
+pub fn insert_tracks_into_database(
+    app_handle: &AppHandle,
+    global_state: State<Mutex<GlobalState>>,
+    paths: Vec<PathBuf>,
+) {
     let state = global_state.lock().unwrap();
 
     for path in paths {
@@ -64,5 +69,40 @@ pub fn insert_tracks_into_database(global_state: State<Mutex<GlobalState>>, path
                     .unwrap();
             }
         }
+
+        if let Some(album_cover) = tag.album_cover() {
+            match save_album_cover(&app_handle, album_cover, album_name.to_string()) {
+                Ok(_) => {}
+                Err(err) => eprintln!("Failed to save album cover: {}", err),
+            }
+        }
     }
+}
+
+fn save_album_cover(
+    app_handle: &AppHandle,
+    image: Picture<'_>,
+    album_name: String,
+) -> Result<(), String> {
+    let cache_dir = app_handle.path().app_cache_dir().unwrap();
+
+    let cached_covers_dir = cache_dir.join("covers");
+    if !cached_covers_dir.exists() {
+        std::fs::create_dir_all(&cached_covers_dir)
+            .map_err(|e| format!("Failed to create album directory: {}", e))?;
+    }
+
+    let image_path = cached_covers_dir.join(format!("{}.jpeg", album_name));
+
+    if image_path.exists() {
+        return Ok(());
+    }
+
+    let mut file = std::fs::File::create(&image_path)
+        .map_err(|e| format!("Failed to create image file: {}", e))?;
+
+    file.write_all(&image.data)
+        .map_err(|e| format!("Failed to write image data: {}", e))?;
+
+    Ok(())
 }

@@ -13,22 +13,36 @@ pub struct Track {
     pub name: String,
     pub path: String,
     pub album_id: i64,
+    pub album_name: Option<String>,
 }
 
 impl Track {
-    pub fn new(id: i64, name: String, path: String, album_id: i64) -> Track {
+    pub fn new(
+        id: i64,
+        name: String,
+        path: String,
+        album_id: i64,
+        album_name: Option<String>,
+    ) -> Track {
         Track {
             id: id,
             name,
             path,
             album_id,
+            album_name,
         }
     }
 }
 
 impl std::clone::Clone for Track {
     fn clone(&self) -> Self {
-        Track::new(self.id, self.name.clone(), self.path.clone(), self.album_id)
+        Track::new(
+            self.id,
+            self.name.clone(),
+            self.path.clone(),
+            self.album_id,
+            self.album_name.clone(),
+        )
     }
 }
 
@@ -46,8 +60,9 @@ pub fn get_all_tracks(global_state: State<Mutex<GlobalState>>) -> Result<Vec<Tra
             let name: String = row.get_ref("name")?.as_str()?.to_string();
             let path: String = row.get_ref("path")?.as_str()?.to_string();
             let album_id: i64 = row.get_ref("album_id")?.as_i64()?;
+            let album_name: String = row.get_ref("album_name")?.as_str()?.to_string();
 
-            tracks.push(Track::new(id, name, path, album_id));
+            tracks.push(Track::new(id, name, path, album_id, Some(album_name)));
 
             Ok(())
         })
@@ -74,7 +89,7 @@ pub fn get_tracks_by_artist(
             let path: String = row.get_ref("path")?.as_str()?.to_string();
             let album_id: i64 = row.get_ref("album_id")?.as_i64()?;
 
-            tracks.push(Track::new(id, name, path, album_id));
+            tracks.push(Track::new(id, name, path, album_id, None));
 
             Ok(())
         })
@@ -101,7 +116,7 @@ pub fn get_tracks_by_album(
             let path: String = row.get_ref("path")?.as_str()?.to_string();
             let album_id: i64 = row.get_ref("album_id")?.as_i64()?;
 
-            tracks.push(Track::new(id, name, path, album_id));
+            tracks.push(Track::new(id, name, path, album_id, None));
 
             Ok(())
         })

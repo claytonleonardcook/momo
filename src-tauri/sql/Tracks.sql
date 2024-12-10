@@ -26,12 +26,14 @@ SELECT id, path
 
 -- name: get_all_tracks?
 -- Get's all tracks from tracks table
-SELECT id, name, path, album_id FROM Tracks
+SELECT Tracks.id AS id, Tracks.name, Tracks.path, Tracks.album_id, Albums.name AS album_name
+    FROM Tracks 
+    JOIN Albums ON Tracks.album_id = Albums.id
 
 -- name: get_tracks_by_artist?
 -- Get all tracks for a specific artist
 -- param: artist_name: &str - the name of the artist
-SELECT Tracks.id AS id, Tracks.name, Tracks.path, Tracks.album_id, Albums.name as album_name, Artists.name as artist_name
+SELECT Tracks.id AS id, Tracks.name, Tracks.path, Tracks.album_id, Albums.name AS album_name, Artists.name AS artist_name
     FROM Tracks
     JOIN Albums ON Tracks.album_id = Albums.id
     JOIN Artists ON Albums.artist_name = Artists.name

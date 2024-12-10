@@ -13,4 +13,5 @@ export type Track = {
   name: string;
   path: string;
   album_id: Album["id"];
+  album_name: Album["name"];
 };

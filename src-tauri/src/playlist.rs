@@ -95,7 +95,7 @@ pub fn get_tracks_in_playlist(
             let path: String = row.get_ref("path")?.as_str()?.to_string();
             let album_id: i64 = row.get_ref("album_id")?.as_i64()?;
 
-            tracks.push(Track::new(id, name, path, album_id));
+            tracks.push(Track::new(id, name, path, album_id, None));
 
             Ok(())
         })

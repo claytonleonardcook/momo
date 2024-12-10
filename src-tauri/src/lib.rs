@@ -5,6 +5,7 @@ use rodio::{OutputStream, Sink};
 use rusqlite::Connection;
 use rusqlite::Result;
 use std::sync::Mutex;
+use tauri::AppHandle;
 use tauri::{Manager, State};
 
 pub mod album;
@@ -72,7 +73,7 @@ fn add_music_folder_path(
 }
 
 #[tauri::command]
-fn scan_directories(global_state: State<Mutex<GlobalState>>) -> Result<(), String> {
+fn scan_directories(app: AppHandle, global_state: State<Mutex<GlobalState>>) -> Result<(), String> {
     let mut paths = Vec::new();
 
     {
@@ -82,7 +83,7 @@ fn scan_directories(global_state: State<Mutex<GlobalState>>) -> Result<(), Strin
         collect_mp3_files(music_folder_paths, &mut paths);
     }
 
-    insert_tracks_into_database(global_state, paths);
+    insert_tracks_into_database(app.app_handle(), global_state, paths);
 
     Ok(())
 }
@@ -99,6 +100,17 @@ pub fn run() {
         .setup(|app| {
             {
                 let global_state = app.state::<Mutex<GlobalState>>();
+                let state = global_state.lock().unwrap();
+
+                let connection = state.connection.lock().unwrap();
+
+                connection.create_artists_table().unwrap();
+                connection.create_albums_table().unwrap();
+                connection.create_tracks_table().unwrap();
+                connection.create_playlist_tracks_table().unwrap();
+            }
+            {
+                let global_state = app.state::<Mutex<GlobalState>>();
                 let mut state = global_state.lock().unwrap();
 
                 match app.path().audio_dir() {
@@ -112,18 +124,8 @@ pub fn run() {
             }
             {
                 let global_state = app.state::<Mutex<GlobalState>>();
-                let state = global_state.lock().unwrap();
-
-                let connection = state.connection.lock().unwrap();
-
-                connection.create_artists_table().unwrap();
-                connection.create_albums_table().unwrap();
-                connection.create_tracks_table().unwrap();
-                connection.create_playlist_tracks_table().unwrap();
-            }
-            {
-                let global_state = app.state::<Mutex<GlobalState>>();
-                match scan_directories(global_state) {
+                let app_handle = app.app_handle();
+                match scan_directories(app_handle.clone(), global_state) {
                     Ok(_) => {}
                     Err(_) => eprint!("Couldn't scan music directories!"),
                 }
