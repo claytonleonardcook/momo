@@ -4,7 +4,6 @@ import Slider from "@/components/atoms/Slider";
 import Icon from "@/components/atoms/Icon";
 import { FaVolumeMute } from "react-icons/fa";
 import { FaVolumeHigh } from "react-icons/fa6";
-import { invoke } from "@tauri-apps/api/core";
 import { SliderProps } from "react-aria-components";
 
 namespace VolumeSlider {
