@@ -5,6 +5,7 @@ import Icon from "@/components/atoms/Icon";
 import { FaVolumeMute } from "react-icons/fa";
 import { FaVolumeHigh } from "react-icons/fa6";
 import { SliderProps } from "react-aria-components";
+import { invoke } from "@tauri-apps/api/core";
 
 namespace VolumeSlider {
   export type Props = HTMLAttributes<HTMLDivElement>;
@@ -29,9 +30,9 @@ const VolumeSlider = ({
 
   function onVolumeChangeEnd(value: number | number[]) {
     if (typeof value === "number") {
-      // invoke("set_volume", {
-      //   volume,
-      // }).catch(console.error);
+      invoke("set_volume", {
+        volume,
+      }).catch(console.error);
     }
   }
 

@@ -55,6 +55,19 @@ impl Default for GlobalState {
 }
 
 #[tauri::command]
+fn set_volume(volume: f32, global_state: State<Mutex<GlobalState>>) -> Result<(), &str> {
+    let state = global_state.lock().unwrap();
+
+    if let Some(sink) = &state.sink {
+        sink.set_volume(volume);
+    } else {
+        return Err("Couldn't set the volume!");
+    }
+
+    Ok(())
+}
+
+#[tauri::command]
 fn play_track(track_id: i64, global_state: State<Mutex<GlobalState>>) -> Result<(), &str> {
     let state = global_state.lock().unwrap();
 
@@ -213,6 +226,7 @@ pub fn run() {
             add_music_folder_path,
             scan_directories,
             play_track,
+            set_volume,
             track::get_all_tracks,
             track::get_tracks_by_artist,
             track::get_tracks_by_album,
