@@ -1,4 +1,4 @@
-import { HTMLAttributes } from "react";
+import { HTMLAttributes, useContext } from "react";
 import styles from "./style.module.scss";
 import Button from "@/components/atoms/Button";
 import Icon from "@/components/atoms/Icon";
@@ -6,6 +6,8 @@ import { FaCheck, FaPlus } from "react-icons/fa";
 import useMusicFolderPaths from "@/hooks/useMusicFolderPaths";
 import { open as openDialog } from "@tauri-apps/plugin-dialog";
 import useSettingsDialog from "@/hooks/useSettingsDialog";
+import RadioGroup from "@/components/atoms/RadioGroup";
+import { ThemeContext, ToastContext } from "@/contexts";
 
 namespace SettingsDialog {
   export type Props = HTMLAttributes<HTMLDialogElement> & {
@@ -16,6 +18,9 @@ namespace SettingsDialog {
 const SettingsDialog = ({ className, ...props }: SettingsDialog.Props) => {
   const settingsDialogRef = useSettingsDialog();
   const { paths, addPath } = useMusicFolderPaths();
+
+  const { theme, setLight, setDark } = useContext(ThemeContext);
+  const { addToast } = useContext(ToastContext);
 
   async function onAddFolder() {
     const directory = await openDialog({
@@ -28,8 +33,14 @@ const SettingsDialog = ({ className, ...props }: SettingsDialog.Props) => {
     addPath(directory);
   }
 
+  function onThemeChange(value: string) {
+    if (value === "light") setLight();
+    else setDark();
+  }
+
   function onApply() {
     settingsDialogRef.current?.close();
+    addToast("Saved new settings.", "blue");
   }
 
   return (
@@ -44,18 +55,31 @@ const SettingsDialog = ({ className, ...props }: SettingsDialog.Props) => {
           <h2 id="dialog-title">Settings</h2>
         </header>
         <main>
-          <section className={styles["settings-dialog__music-folders"]}>
-            <h3>Music Folders:</h3>
-            <ul>
-              {paths.map((path, index) => (
-                <li key={index}>{path}</li>
-              ))}
-            </ul>
-            <Button onPress={onAddFolder}>
-              <Icon icon={FaPlus} />
-              Add New Folder
-            </Button>
-          </section>
+          <div>
+            <section>
+              <h3>Theme:</h3>
+              <RadioGroup defaultValue={theme} onChange={onThemeChange}>
+                <RadioGroup.RadioButton value={"light"}>
+                  Light
+                </RadioGroup.RadioButton>
+                <RadioGroup.RadioButton value={"dark"}>
+                  Dark
+                </RadioGroup.RadioButton>
+              </RadioGroup>
+            </section>
+            <section>
+              <h3>Music Folders:</h3>
+              <ul>
+                {paths.map((path, index) => (
+                  <li key={index}>{path}</li>
+                ))}
+              </ul>
+              <Button onPress={onAddFolder}>
+                <Icon icon={FaPlus} />
+                Add New Folder
+              </Button>
+            </section>
+          </div>
           <Button
             onPress={onApply}
             className={styles["settings-dialog__apply"]}
