@@ -11,6 +11,9 @@ type TypeToastContext = {
   ) => void;
 };
 
-const ToastContext = createContext<TypeToastContext | undefined>(undefined);
+const ToastContext = createContext<TypeToastContext>({
+  toasts: [],
+  addToast: () => {},
+});
 
 export default ToastContext;

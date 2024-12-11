@@ -1,5 +1,15 @@
 import { createContext } from "react";
 
-const ThemeContext = createContext<"light" | "dark" | null>(null);
+export type TypeThemeContext = {
+  theme: "light" | "dark" | null;
+  setLight: () => void;
+  setDark: () => void;
+};
+
+const ThemeContext = createContext<TypeThemeContext>({
+  theme: "dark",
+  setLight: () => {},
+  setDark: () => {},
+});
 
 export default ThemeContext;
