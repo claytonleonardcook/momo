@@ -1,13 +1,13 @@
 import { HTMLAttributes, useState } from "react";
 import styles from "./style.module.scss";
 import Button from "@/components/atoms/Button";
-import Slider from "@/components/atoms/Slider";
 import Icon from "@/components/atoms/Icon";
 import { FaBackward, FaBars, FaForward, FaPause, FaPlay } from "react-icons/fa";
 import { FaRepeat, FaShuffle } from "react-icons/fa6";
 import { invoke } from "@tauri-apps/api/core";
 import VolumeSlider from "@/components/molecules/VolumeSlider";
 import useSettingsDialog from "@/hooks/useSettingsDialog";
+import TrackTimeline from "@/components/molecules/TrackTimeline";
 
 type TrackControlsProps = HTMLAttributes<HTMLDivElement> & {
   trackDuration: number;
@@ -80,17 +80,7 @@ const TrackControls = ({
           <Icon icon={FaForward} />
         </Button>
       </div>
-      <div className={styles["track-controls--time"]}>
-        <span>00:00</span>
-        <Slider
-          className={styles["track-controls--time__track"]}
-          color={"blue"}
-          defaultValue={100}
-        >
-          <Slider.Track />
-        </Slider>
-        <span>3:46</span>
-      </div>
+      <TrackTimeline className={styles["track-controls--time"]} />
       <VolumeSlider className={styles["track-controls--volume"]}>
         <VolumeSlider.Icon />
         <VolumeSlider.Slider />

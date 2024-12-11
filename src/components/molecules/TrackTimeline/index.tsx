@@ -1,29 +1,33 @@
-import { HTMLAttributes, useState } from "react";
+import { HTMLAttributes } from "react";
 import styles from "./style.module.scss";
 import Slider from "@/components/atoms/Slider";
+import useTrackPosition from "@/hooks/useTrackPosition";
+import { trackTimeFormat } from "@/utils";
 
 namespace TrackTimeline {
   export type Props = HTMLAttributes<HTMLDivElement>;
 }
 
 const TrackTimeline = ({
-  className,
+  className = "",
   children,
   ...props
 }: TrackTimeline.Props) => {
-  const [time] = useState<number>(0);
+  const { position, totalDuration } = useTrackPosition();
 
   return (
-    <div className={styles["track-timeline"]} {...props}>
-      <span>00:00</span>
+    <div className={`${styles["track-timeline"]} ${className}`} {...props}>
+      <span>{trackTimeFormat(position)}</span>
       <Slider
         className={styles["track-timeline__track"]}
         color={"blue"}
-        value={time}
+        value={position}
+        minValue={0}
+        maxValue={totalDuration}
       >
         <Slider.Track />
       </Slider>
-      <span>3:46</span>
+      <span>{trackTimeFormat(totalDuration)}</span>
     </div>
   );
 };

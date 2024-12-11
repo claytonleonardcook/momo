@@ -1,12 +1,15 @@
 use crate::utilities::{collect_mp3_files, insert_tracks_into_database};
 use include_sqlite_sql::{impl_sql, include_sql};
 use queues::Queue;
-use rodio::Decoder;
+use rodio::{Decoder, Source};
 use rodio::{OutputStream, Sink};
 use rusqlite::Connection;
 use rusqlite::Result;
+use serde::Serialize;
+use std::io::BufRead;
 use std::sync::Mutex;
-use tauri::AppHandle;
+use std::time::Duration;
+use tauri::{AppHandle, Emitter};
 use tauri::{Manager, State};
 
 pub mod album;
@@ -21,11 +24,18 @@ include_sql!("sql/Artists.sql");
 include_sql!("sql/Playlists.sql");
 include_sql!("sql/PlaylistTracks.sql");
 
+#[derive(Debug, Serialize)]
+struct TrackPositionPayload {
+    position: u64,
+    total_duration: u64,
+}
+
 pub struct GlobalState {
     pub connection: std::sync::Mutex<rusqlite::Connection>,
     pub sink: Option<rodio::Sink>,
     pub queue: Queue<String>,
     pub music_folder_paths: Vec<String>,
+    pub current_track_duration: u64,
 }
 
 impl GlobalState {
@@ -35,7 +45,12 @@ impl GlobalState {
             sink: Some(sink),
             queue: Queue::new(),
             music_folder_paths: Vec::new(),
+            current_track_duration: 0,
         }
+    }
+
+    pub fn set_current_track_duration(&mut self, duration: Duration) {
+        self.current_track_duration = duration.as_secs();
     }
 
     pub fn add_music_folder_path(&mut self, path: &str) {
@@ -50,6 +65,7 @@ impl Default for GlobalState {
             sink: Option::None,
             queue: Queue::new(),
             music_folder_paths: Vec::new(),
+            current_track_duration: 0,
         }
     }
 }
@@ -69,23 +85,31 @@ fn set_volume(volume: f32, global_state: State<Mutex<GlobalState>>) -> Result<()
 
 #[tauri::command]
 fn play_track(track_id: i64, global_state: State<Mutex<GlobalState>>) -> Result<(), &str> {
-    let state = global_state.lock().unwrap();
+    let mut state = global_state.lock().unwrap();
 
     if let Some(sink) = &state.sink {
         sink.clear();
 
-        let connection = state.connection.lock().unwrap();
-
-        let path = connection
-            .get_track_path_by_id(track_id, |row| {
-                Ok(row.get_ref("path")?.as_str()?.to_string())
-            })
-            .unwrap();
+        let path = {
+            let connection = state.connection.lock().unwrap();
+            connection
+                .get_track_path_by_id(track_id, |row| {
+                    Ok(row.get_ref("path")?.as_str()?.to_string())
+                })
+                .unwrap()
+        };
 
         let track = std::io::BufReader::new(std::fs::File::open(path).unwrap());
         let source = Decoder::new(track).unwrap();
+
+        let total_duration = source.total_duration();
+
         sink.append(source);
         sink.play();
+
+        if let Some(duration) = total_duration {
+            state.set_current_track_duration(duration);
+        };
     } else {
         return Err("Couldn't play track!");
     }
@@ -98,6 +122,25 @@ fn get_music_folder_paths(global_state: State<Mutex<GlobalState>>) -> Result<Vec
     let state = global_state.lock().unwrap();
 
     Ok(state.music_folder_paths.clone())
+}
+
+#[tauri::command]
+fn get_track_position(
+    global_state: State<Mutex<GlobalState>>,
+) -> Result<TrackPositionPayload, &str> {
+    let state = global_state.lock().unwrap();
+
+    if let Some(sink) = &state.sink {
+        let position = sink.get_pos().as_secs();
+        let total_duration = state.current_track_duration;
+
+        return Ok(TrackPositionPayload {
+            position,
+            total_duration,
+        });
+    }
+
+    Err("Couldn't get track position!")
 }
 
 #[tauri::command]
@@ -172,13 +215,6 @@ pub fn run() {
             }
 
             // {
-            //     let mut paths = Vec::new();
-
-            //     collect_mp3_files(Path::new("$AUDIO"), &mut paths);
-            //     insert_tracks_into_database(app.state(), paths);
-            // }
-
-            // {
             //     let global_state = app.state::<Mutex<GlobalState>>();
             //     let state = global_state.lock().unwrap();
             //     let connection = state.connection.lock().unwrap();
@@ -227,6 +263,7 @@ pub fn run() {
             scan_directories,
             play_track,
             set_volume,
+            get_track_position,
             track::get_all_tracks,
             track::get_tracks_by_artist,
             track::get_tracks_by_album,
