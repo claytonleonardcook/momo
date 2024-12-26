@@ -3,12 +3,16 @@ import ThemeContext, { TypeThemeContext } from "./ThemeContext";
 
 export namespace ThemeProvider {
   export type Props = {
+    defaultTheme?: TypeThemeContext["theme"];
     children: ReactNode;
   };
 }
 
-function ThemeProvider({ children }: ThemeProvider.Props) {
-  const [theme, setTheme] = useState<TypeThemeContext["theme"]>("dark");
+function ThemeProvider({
+  defaultTheme = "dark",
+  children,
+}: ThemeProvider.Props) {
+  const [theme, setTheme] = useState<TypeThemeContext["theme"]>(defaultTheme);
 
   useEffect(() => {
     document.body.setAttribute("data-theme", theme ?? "dark");

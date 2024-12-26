@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import type { Preview } from "@storybook/react";
-import ThemeContext from "../src/contexts/ThemeContext";
-import { ToastContainer, ToastProvider } from "../src/components/atoms/Toast";
+import { ToastContainer } from "../src/components/atoms/Toast";
+import { ToastProvider, ThemeProvider, ThemeContext } from "../src/contexts";
 import "./global.scss";
 import { THEME } from "./manager";
 
@@ -26,15 +26,12 @@ const preview: Preview = {
     (Story, context) => {
       document.body.setAttribute("data-theme", context.globals.theme);
 
-      const [toasts, setToasts] = useState([]);
-
       return (
         <ToastProvider>
-          <ThemeContext.Provider value={context.globals.theme}>
+          <ThemeProvider defaultTheme={context.globals.theme}>
             <Story />
-          </ThemeContext.Provider>
-
-          <ToastContainer />
+            <ToastContainer />
+          </ThemeProvider>
         </ToastProvider>
       );
     },
