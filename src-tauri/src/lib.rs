@@ -6,10 +6,9 @@ use rodio::{OutputStream, Sink};
 use rusqlite::Connection;
 use rusqlite::Result;
 use serde::Serialize;
-use std::io::BufRead;
 use std::sync::Mutex;
 use std::time::Duration;
-use tauri::{AppHandle, Emitter};
+use tauri::AppHandle;
 use tauri::{Manager, State};
 
 pub mod album;
