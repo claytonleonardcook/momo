@@ -59,12 +59,13 @@ jobs:
           export NVM_DIR="$HOME/.nvm"
           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
           nvm install
-          nvm use
           node --version
         working-directory: webdriver/webdriverio
 
       - name: Install NPM dependencies
-        run: npm install --ci
+        run: |
+          nvm use
+          npm install --ci
         working-directory: webdriver/webdriverio
 
       - name: Install tauri-driver
