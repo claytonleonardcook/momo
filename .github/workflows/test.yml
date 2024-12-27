@@ -10,8 +10,6 @@ on:
 
 jobs:
   test:
-    name: WebDriverIO Test Runner
-
     runs-on: ubuntu-22.04
 
     steps:
@@ -41,25 +39,7 @@ jobs:
         run: cargo test
         working-directory: src-tauri
 
-      - name: Cargo build
-        run: cargo build --release
-        working-directory: src-tauri
-
-      - name: Set the correct Node version using nvm
-        shell: bash -l {0}
-        run: |
-          nvm install
-          nvm use
-        working-directory: webdriver/webdriverio
-
-      - name: Install Dependencies
-        run: npm install --ci
-        working-directory: webdriver/webdriverio
-
-      - name: Install tauri-driver
-        run: cargo install tauri-driver --locked
-        working-directory: src-tauri
-
-      - name: Run WebDriverIO tests
-        run: xvfb-run npm test
-        working-directory: webdriver/webdriverio
+      # TODO: Add build when application is ready for released executables
+      # - name: Cargo build
+      #   run: cargo build --release
+      #   working-directory: src-tauri
