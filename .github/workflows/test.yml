@@ -38,9 +38,11 @@ jobs:
 
       - name: Cargo test
         run: cargo test
+        working-directory: src-tauri
 
       - name: Cargo build
         run: cargo build --release
+        working-directory: src-tauri
 
       - name: Install NVM
         run: |
@@ -66,6 +68,7 @@ jobs:
 
       - name: Install tauri-driver
         run: cargo install tauri-driver --locked
+        working-directory: src-tauri
 
       - name: Run WebDriverIO tests
         run: xvfb-run npm test
