@@ -27,7 +27,7 @@ fn can_get_track_information() {
 
                 collect_mp3_files(vec!["../public".to_string()], &mut paths);
 
-                insert_tracks_into_database(app.state(), paths);
+                insert_tracks_into_database(app.handle(), app.state(), paths);
             }
 
             common::print_all_tracks_by_artist("Cat", app.state()).unwrap();

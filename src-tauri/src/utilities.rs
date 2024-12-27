@@ -3,7 +3,7 @@ use audiotags::{Picture, Tag};
 use include_sqlite_sql::{impl_sql, include_sql};
 use std::io::Write;
 use std::{fs::canonicalize, path::PathBuf, sync::Mutex};
-use tauri::{AppHandle, Manager, State};
+use tauri::{AppHandle, Manager, Runtime, State};
 
 include_sql!("sql/Tracks.sql");
 include_sql!("sql/Albums.sql");
@@ -35,8 +35,8 @@ pub fn collect_mp3_files(paths: Vec<String>, mp3_files: &mut Vec<PathBuf>) {
     }
 }
 
-pub fn insert_tracks_into_database(
-    app_handle: &AppHandle,
+pub fn insert_tracks_into_database<R: Runtime>(
+    app_handle: &AppHandle<R>,
     global_state: State<Mutex<GlobalState>>,
     paths: Vec<PathBuf>,
 ) {
@@ -79,8 +79,8 @@ pub fn insert_tracks_into_database(
     }
 }
 
-fn save_album_cover(
-    app_handle: &AppHandle,
+fn save_album_cover<R: Runtime>(
+    app_handle: &AppHandle<R>,
     image: Picture<'_>,
     album_name: String,
 ) -> Result<(), String> {
