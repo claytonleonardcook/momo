@@ -30,7 +30,8 @@ jobs:
             libayatana-appindicator3-dev \
             librsvg2-dev \
             webkit2gtk-driver \
-            xvfb
+            xvfb \
+            libasound2-dev
 
       - name: Setup rust-toolchain stable
         id: rust-toolchain
