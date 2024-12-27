@@ -45,27 +45,15 @@ jobs:
         run: cargo build --release
         working-directory: src-tauri
 
-      - name: Install NVM
+      - name: Set the correct Node version using nvm
+        shell: bash -l {0}
         run: |
-          curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-          nvm install --lts
-          nvm use
-
-      - name: Install Node.js via NVM
-        run: |
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
           nvm install
-          node --version
+          nvm use
         working-directory: webdriver/webdriverio
 
-      - name: Install NPM dependencies
-        run: |
-          nvm use
-          npm install --ci
+      - name: Install Dependencies
+        run: npm install --ci
         working-directory: webdriver/webdriverio
 
       - name: Install tauri-driver
